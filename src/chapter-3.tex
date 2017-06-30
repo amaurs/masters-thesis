@@ -1,1 +1,16 @@
-chapter 3
+
+In this chapter we will talk about the implementation of our experiment. The details of the pipeline architecture, and the techniques used to obtain and curate data. Details on the data munging and preprocessing are also given.
+
+\section{Ingestion}
+
+We built a system to ingest the images from the NOAA service. It lazily downloads the images by checking first if the file is already present in the temporary folder. If the file does not exists it downloads it, then the system tries to add it to the database and persistent file system. To maintain a coherent one to one mapping between the database and the file system, the process of adding a new scene must be successful both in the database and in the filesystem, otherwise the file is erased from both, and the state of the system remains as it was before the ingestion atempt.
+
+\section{Training data}
+
+Aerial tagged data is scarce. In particular, for the purpose of our experiment, we don't have any useful metadata on the images. We propose a method to tag samples of the scenes using crowd sourcing. We built a service that crops samples from the images and exposes them to a online application that lets any user with access to tag an image. We have three categories: the image has water in it, the image does not have water in it, and it is not possible to tell. When a possitive answer is obtained, the sistem persist de image in the data base with the information of from which scene was it extracted.
+
+\section{Data augmentation}
+
+Given the nature of our task, it is hard to adquire the tagged images. To increment the size of our training data set even more, we use a technique known as data augmentation. It relies on the fact that affine transformations do not change the content of the scenes, however a transformed scene appears as a completely new one to the classifier. 
+
+The images where rotated by 10 degrees, and reflected by the x-axis and the y-axis this gives us a $x144$ factor, this means that for each tagged image, the training corpus is incremented by $144$ images. The problem with this aproach is that when a square image is rotated, some information on the corners is lost so we have to adjust the original image so that we can still crop a complete square from the desired size from it. For our experiment, the input size for the neural network is $227\times 227$ pixels, so the original images must be at least $\sqrt{2}$ times $227$ on each side. This way no matter how we rotate the original image, we can still crop a $227\times 227$ from the center of the rotation without losing any data.
