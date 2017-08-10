@@ -10,9 +10,9 @@ Aerial tagged data is scarce. In particular, for the purpose of our experiment, 
 
 \section{Data augmentation}
 
-Given the nature of our task, it is hard to adquire the tagged images. To increment the size of our training data set even more, we use a technique known as data augmentation. It relies on the fact that affine transformations do not change the content of the scenes, however a transformed scene appears as a completely new one to the classifier. 
+Given the nature of our task, it is hard to acquire the tagged images. To increment the size of our training data set even more, we use a technique known as data augmentation. It relies on the fact that affine transformations do not change the content of the scenes, however a transformed scene appears as a completely new one to the classifier. 
 
-The images where rotated by 10 degrees, and reflected by the x-axis and the y-axis this gives us a $x144$ factor, this means that for each tagged image, the training corpus is incremented by $144$ images. The problem with this aproach is that when a square image is rotated, some information on the corners is lost so we have to adjust the original image so that we can still crop a complete square from the desired size from it. For our experiment, the input size for the neural network is $227\times 227$ pixels, so the original images must be at least $\sqrt{2}$ times $227$ on each side. This way no matter how we rotate the original image, we can still crop a $227\times 227$ from the center of the rotation without losing any data.
+The images where rotated by 10 degrees, and reflected by the x-axis and the y-axis this gives us a $x144$ factor, this means that for each tagged image, the training corpus is incremented by $144$ images. The problem with this approach is that when a square image is rotated, some information on the corners is lost so we have to adjust the original image so that we can still crop a complete square from the desired size from it. For our experiment, the input size for the neural network is $227\times 227$ pixels, so the original images must be at least $\sqrt{2}$ times $227$ on each side. This way no matter how we rotate the original image, we can still crop a $227\times 227$ from the center of the rotation without losing any data.
 
 \section{Train}
 

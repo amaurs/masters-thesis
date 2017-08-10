@@ -1,1 +1,16 @@
-This is the introduction of this work, here we will give a short summary of the other chapters.
+In this chapter we explore the motivation, objective and scope of the present work. 
+
+
+\section{Motivation}
+
+In CONABIO we use landcover maps to analyze and assess the evolution of the environment through time. We make this possible by leveraging classic classification algorithms and a large amount of computing power. While our efforts have been quite productive, these algorithms have certain limits, they rely on the use of the light spectrum. As a concecuense any two categories with similar spectrum footprint will, in all likelihood, confuse the classifier. Curiosly enough humans have little problem distinguish between some of these pair of categories. For example, crops and grasslands might seem identical to a supervised classifier, but we can certainly tell the difference from one another. This is caused because our brains are not seeing particular pixels and trying to classify them one by one. Instead, our brains look at the whole picture, we focus on zones of the image an all of the information included in them, in other words we care about contex. Convolutional Neural Networks take this into account. Each neuron of the network cares only about certain zone of the image, when information flows through the layers of the network, there are certain neurons that activate upon certain stimulae. Taking context into account lets the network to recognize certain features that would be invisible to a classic classifier, for example geometries. When we ask ourselfs why it is so easy to differenciate crops from grasslands geomgetry comes as a natural answer. Crops have very particual shapes.
+
+\section{Objective}
+
+We want to explore the use of Convolutional Neural Networks in the context of Landcover classification. Novel techniques in computational areas always offer amazing opportunities in other fields. In our concrete case, we want to teach a neural network how to perform a task, and then extract knowledge about how the network achieves that.
+
+
+
+\section{Scope}
+
+It would be far to ambitious to cover every topic that is involved in the process of the classification usign Convolutional Neural Networks. We want to explain how does the networks work to certain extent, but it would be imposible to untangle every single detail. In the same fashion, the field of Remote Sensing is far to big to be explored in this work. We asume certain degree of knowledge in related topics and we expose the matematical details in the appedix.
