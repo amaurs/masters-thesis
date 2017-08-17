@@ -5,21 +5,21 @@ In this chapter, we explore the motivation, objective and scope of the present w
 
 In CONABIO we use landcover maps to analyze and assess the evolution of the environment through time. We make this possible by leveraging classic classification algorithms and a large amount of computing power. While our efforts have been quite productive, these algorithms have certain limits, they rely on the use of the light spectrum. As a consequence, any two categories with similar spectrum footprint will, in all likelihood, confuse the classifier. Curiously enough, humans have little problem distinguish between some of these pairs of categories. For example, crops and grasslands might seem identical to a supervised classifier, but we can certainly tell the difference from one another. This is caused because our brains are not seeing particular pixels and trying to classify them one by one. Instead, our brains look at the whole picture, we focus on zones of the image an all of the information included in them, in other words, we care about context. Convolutional Neural Networks take this into account. Each neuron of the network cares only about a certain zone of the image when information flows through the layers of the network, there are certain neurons that activate upon certain stimuli. Taking context into account lets the network to recognize certain features that would be invisible to a classic classifier, for example: shapes and geometries. When we ask ourselves why it is so easy to differentiate crops from grasslands geometry comes as a natural answer. Crops have very particular shapes.\\
 
-In the context of natural disasters other options have been considered \cite{Kryvasheyeue1500779}.
+In the context of natural disasters other options have been considered \cite{Kryvasheyeue1500779}.\\
 
-DeCAF paper talks about using the features extracted from a neural convolutional network to use in traditional methods. \cite{DBLP:journals/corr/DonahueJVHZTD13}
+DeCAF paper talks about using the features extracted from a neural convolutional network to use in traditional methods. \cite{DBLP:journals/corr/DonahueJVHZTD13}\\
 
-This is another attempt that adds to the evidence that features engineered by the Neural Network work pretty good off the shelf. \cite{DBLP:journals/corr/RazavianASC14}
+This is another attempt that adds to the evidence that features engineered by the Neural Network work pretty good off the shelf. \cite{DBLP:journals/corr/RazavianASC14}\\
 
-Transfer learning is explored by Yosinski \textit{et al.} \cite{DBLP:journals/corr/YosinskiCBL14}. They propose to use an already trained architecture in new tasks by replacing diferent layers and retraining.
+Transfer learning is explored by Yosinski \textit{et al.} \cite{DBLP:journals/corr/YosinskiCBL14}. They propose to use an already trained architecture in new tasks by replacing diferent layers and retraining.\\
 
-In \cite{DBLP:journals/corr/LongSD14} they use the features extracted from the CNN to segment an image.
+In \cite{DBLP:journals/corr/LongSD14} they use the features extracted from the CNN to segment an image.\\
 
-The possibility of having a single model that can perfom correctly in many different tasks is explored in \cite{DBLP:journals/corr/KaiserGSVPJU17}
+The possibility of having a single model that can perfom correctly in many different tasks is explored in \cite{DBLP:journals/corr/KaiserGSVPJU17}\\
 
-A survey on disctint aspects of how transfer learning is used can be found in \cite{5288526}.
+A survey on disctint aspects of how transfer learning is used can be found in \cite{5288526}.\\
 
-The use of active learning together with semisupervised learning tenchniques is explored in \cite{7956153}.
+The use of active learning together with semisupervised learning tenchniques is explored in \cite{7956153}.\\
 
 
 \section{Objective}
