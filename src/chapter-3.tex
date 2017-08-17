@@ -1,5 +1,30 @@
 In this chapter the mathematical details of the CNN are exposed. How does backpropagation works, and differences between multiclass and multilabel classificatión.
 
-\section{Tensorflow}
+\section{TensorFlow}
 
-Tensorflow is a framework developed by the Google Brain Team, and opened sourced in November 9, 2015 \cite{tensorflow2015-whitepaper}. It was developed with the focus of having an easy to use system. It was thought as a way to expressing Machine Learning algorithms using a common interface. In this section we will untangle some of the details of how tensorflow and its graph model work \cite{DBLP:journals/corr/AbadiBCCDDDGIIK16}.
+TensorFlow is a machine learning system developed by the Google Brain Team to superseed its first-generation system, DistBelief. It was opened sourced in November 9, 2015 \cite{tensorflow2015-whitepaper}. It was developed with the programer in mind focusing on an easy to use system. It was thought as a way to expressing Machine Learning algorithms using a common interface. In this section we will untangle some of the details of how TensorFlow and its graph model work \cite{DBLP:journals/corr/AbadiBCCDDDGIIK16}.\\
+
+The decision to use TensorFlow in our investigation was to exploit several of its features. It uses an elegant dataflow system in which both the operations and the state of the algorithm are represented as nodes and edges in the graph. This lets the system to precalculate an optimal subgraph before starting the calculations.\\
+
+In constrast with DistBelief, this system lets the user to define new operations and register them to use within the framework. Additionaly, it was developed to target different platforms, from machine clusters to mobile devices. Using the same programming model, TensorFlow decides in runtime which pieces to use. This is useful when you take into account the whole development process of a data product and how it evolves. We can think of a common scenario, first, the developer experminets with data in a single computer before deploying the system to train with a larger data set in a cluster of computers, when the model is trained, it can be deployed to an online server which will run in a single computer or it can be implemented to be used in a mobile device for offline use. In each of these steps the underlying environment is completely different, however, TensorFlow adapts automaticaly to each situation. That's where TensorFlow shines.\\
+
+As a common interchage data format it uses tensors. As with machine learning algorithms it is often the case to have sparse data instead, encoding it as dense tensors is a very clever way to save space. As we mentioned before, TensorFlow uses a graph to represent both the state and the operations. Nodes represent operations and edges the output and input between these operations. The system takes its name from the tensors flowing throught this pipes. Although it is not of particular importance to our experiment, it is worth mentioning that TensorFlow supports algorithms with conditional and iterative control flow, which means that it can be used, without further tunning, to train Recurrent Neural Networks which are very important in fields like speech recognition and language modeling.\\
+
+The system also provides a library that allows symbolic differentiation. As many machine learning tecniques rely on Stochastic Gradient Descent to train a set of parameters, this feature makes easier to explore new techniques as the backpropagation code is automatically produced for any combination of operation nodes. 
+
+TensorFlow was built with huge datasets in mind. It provides an intern library that allows the distribution of datasets that would be to large to fit in RAM. Instead data can be sliced, taking advantage of how some algorithms work.
+
+The framework code is deeply optimized. Implementations of the same interface target the different dispositives that the code can run in. It is built uppon known mature frameworks such as cuDNN, a library for deep neural networks that targets NVIDIA GPUs, and Eigen, a C++ library for linear algebra. On top of this infrastructure, TensorFlow offers a Python client. This made the system an obvious choice given that our complete pipeline was already written in Python.
+
+
+
+
+
+
+
+
+
+
+
+
+
