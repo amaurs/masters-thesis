@@ -1,6 +1,16 @@
-In this chapter we will explain the extent of our results, and how it is possible to extract a binary landcover map with the presence and ausence of water.
 
-\section{Model creation}
 
-In order to create the model we need to select a sample from the thumbnails that we extracted from the original images. We wanted to create a process that was easily reproductible so we would compare models in a simple fashion. To this end the sample must be random each run and we need to split the images in three sets: training, validation and testing.
 
+This was an important experiment because it let us describe the use of novel techniques in the process of image classification.
+
+\section{Conclusion}
+
+Our efforts showed that it is possible to deliver a preliminary product with little training effort. This product might be used as a baseline in the event of a disaster such as an earthquake to give an idea of where to start looking for damaged buildings so resources can be allocated in an efficient manner. 
+
+\section{Drawbacks}
+
+We noticed that, even when the classifier performs well in environments different to the one that it was trained with, it learns to classify dribble, not exactly damaged buildings. We noticed some examples in which the classifier correctly finds scenes with presence of dribble, however, when we inspected the place using Google Street View, we noticed that there was no building in that place. This can can think of two possible scenarios in which this is possible; there was never a building in that place an it was used as a disposal for dribble from other places, or a house was built after the picture in Google Street View was taken. Bothe cases show inherent limitations of the methodology that we are proposing, we can only automate this kind of process to a certain extent.
+
+\section{Future work}
+
+An idea that was beyond the scope of this reasearch was to incorporate a technique known as active learning. In this scheme, the algorithm keeps improving as it receives feedback from the experts. In this fashion, when the model makes mistakes, this incorrectly labeled scenes can be relabeled and feed back to the system in order to create a new model and keep improving its performance. Although there is a limit to the extent in which the algorithm can perform, this might aid in some obvious cases that might not be present in the original training data.
