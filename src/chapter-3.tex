@@ -15,6 +15,15 @@ Given the nature of our task, it is hard to acquire the tagged images. To increm
 
 The images were rotated by 10 degrees, and reflected by the x-axis and the y-axis this gives us a $x144$ factor, this means that for each tagged image, the training corpus is incremented by $144$ images. The problem with this approach is that when a square image is rotated, some information on the corners is lost so we have to adjust the original image so that we can still crop a complete square from the desired size from it. For our experiment, the input size for the neural network is $227\times 227$ pixels, so the original images must be at least $\sqrt{2}$ times $227$ on each side. This way no matter how we rotate the original image, we can still crop a $227\times 227$ from the center of the rotation without losing any data.\\
 
+\section{Database}
+
+In the figure the database diagram
+
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\label{fig:database}\fbox{\includegraphics[width=.75\textwidth]{images/database.png}}}
+  \end{center}
+\end{figure}
 
 \section{Train}
 
