@@ -17,17 +17,21 @@ The images were rotated by 10 degrees, and reflected by the x-axis and the y-axi
 
 \section{Database}
 
-In the figure the database diagram
+In the figure we show a subset of the database diagram. Tables inherent to the features of the django framework are not shown. The database design was based on reproducible reaseach. We wanted to keep track of the charactistics of the models trained. Also we wanted to know which where the training images used for each model. In order for the tagging application to work, images must be ingested into the system so every time a new sample is tagged we populate the database with information about the original image and the coordinates relative to the original image. In the final stage of the process we produce a list of potential damaged buildings which are also inserted into the database with geografical information and human readable address. We think that this can be helpfull to allocate resources in the most efficient way.
 
 \begin{figure}[h]
   \begin{center}
-    \subfigure{\label{fig:database}\fbox{\includegraphics[width=.75\textwidth]{images/database.png}}}
+    \subfigure{\label{fig:database}\fbox{\includegraphics[width=1\textwidth]{images/database.png}}}
   \end{center}
 \end{figure}
 
 \section{Train}
 
-Images were tagged by hand.
+We needed data to train our model. Raw dron images where obtained from the National Center for Disaster Prevention (CENAPRED). Drons flew over three towns in the state of Oaxaca producing $3733$ images during several days. Images contain gps information about the place where they where taken, however, it is not posible to produce a one to one mapping from the pictures to georeferenced points. With this limitation it was not possible to locate possible damaged buildings from the raw images. However, the model does not need any geografical information to be trained as it relies only in the pixel intensities.
+
+Cropping and tagging manualy a large number of samples from the images was prohibitive. In order to overcome this obstacle an online tagging application was developed for this purpose. The idea was to decentralize the tagging procedure by giving an easy to use tool that was able to run from any browser. This way the cumbersome task of tagging the images can be crowdsourced.
+
+By consuming the REST api described in the previous section, a simple web client was developed using jquery and openlayers. The interface is an image viewer with a selection and a button to submit an opition on that the higlighted area.
 
 \section{Predict}
 
