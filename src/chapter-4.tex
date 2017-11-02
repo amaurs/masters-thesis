@@ -2,14 +2,32 @@ This chapter elaborates on how the model was trained and compared with other tec
 
 \section{Exploratory analysis}
 
-Drone images from threed different towns in the state of Oaxaca where obtained from the National Center for Disaster Prevention (CENAPRED). This pictures where taken during the week following an earthquake that originated in the Pacific coast of the state. We have 727 images from Santa Maria Xadani, 1872 from Union Hidalgo, and 1134 images from Juchitan of Zaragoza. 
-
-
-A t-sne analysis was performed with the images, and it is shown in the figure. To this end, the information from the pixels of each images was flattened into a vector comprising the means and standard deviations. This was a simple dimensionality reduction technique and was useful to embed the images into a lower dimensional space. As we can see, images form natural clusters depending on the town that they where taken from. This was somewhat expected because of the light conditions during the exposure tend to have less variance among similar times and places.
+Drone images from three different towns in the state of Oaxaca where obtained from the National Center for Disaster Prevention (CENAPRED). This pictures where taken during the week following an earthquake that originated in the Pacific coast of the state. We have 727 images from Santa Maria Xadani, 1872 from Union Hidalgo, and 1134 images from Juchitan of Zaragoza. As we can see in the following figures, the drones fly in a regular pattern forming a lattice of points where the images are taken. It is natural to think that given the spatial distribution, that the images are spatialy clustered. We wanted to show that this clustering translates to the space of the information that the images contain. In order to do this, a usual technique was applied to our set of images.
 
 \begin{figure}[h]
   \begin{center}
-    \subfigure{\label{fig:hausdorff}\fbox{\includegraphics[width=.75\textwidth]{src/t-sne.png}}}
+    \subfigure{\label{fig:tsne}\fbox{\includegraphics[width=1\textwidth]{images/juchitan.png}}}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\label{fig:tsne}\fbox{\includegraphics[width=1\textwidth]{images/xadani.png}}}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\label{fig:tsne}\fbox{\includegraphics[width=1\textwidth]{images/union.png}}}
+  \end{center}
+\end{figure}
+
+A t-sne analysis was performed with the images, and it is shown in the figure. To this end, the information from the pixels of each images was flattened into a vector comprising the means and standard deviations. This was a simple dimensionality reduction technique and was useful to embed the images into a lower dimensional space. As we can see, images form natural clusters depending on the town that they where taken from. This was somewhat expected because of the light conditions during the exposure tend to have less variance among similar times and places.
+
+
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\label{fig:tsne}\fbox{\includegraphics[width=1\textwidth]{images/t-sne.png}}}
   \end{center}
 \end{figure}
 

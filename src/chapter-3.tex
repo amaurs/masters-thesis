@@ -31,7 +31,7 @@ We needed data to train our model. Raw dron images where obtained from the Natio
 
 Cropping and tagging manualy a large number of samples from the images was prohibitive. In order to overcome this obstacle an online tagging application was developed for this purpose. The idea was to decentralize the tagging procedure by giving an easy to use tool that was able to run from any browser. This way the cumbersome task of tagging the images can be crowdsourced.
 
-By consuming the REST api described in the previous section, a simple web client was developed using jquery and openlayers. The interface is an image viewer with a selection and a button to submit an opition on that the higlighted area.
+By consuming the REST api described in the previous section, a simple web client was developed using jquery and openlayers. The interface is an image viewer with a selection and a button to submit an opition on that the higlighted area. The user will select an appropiate section of the given image, tag it, and then submit the section. In the backend, the image is cropped and ingested into the database.
 
 \begin{figure}[h]
   \begin{center}
@@ -39,11 +39,14 @@ By consuming the REST api described in the previous section, a simple web client
   \end{center}
 \end{figure}
 
+An additional button is given that lets the user see how well is the current best model performing. The process is quite similar to the previous one. In the server, the image is cropped and then the thumbnail is exposed to the model and the result is written back to the client through the REST api.
+
 \begin{figure}[h]
   \begin{center}
     \subfigure{\label{fig:database}\fbox{\includegraphics[width=1\textwidth]{images/predict.png}}}
   \end{center}
 \end{figure}
+
 
 \begin{figure}[h]
   \begin{center}
@@ -51,11 +54,14 @@ By consuming the REST api described in the previous section, a simple web client
   \end{center}
 \end{figure}
 
+During the process, we noticed that the tagging process can lead to errors. In order to deal with those mistaken tagged images, a visualiser for the tagged images was developed. It consist in a simple interface where the last tagged images are shown with their respective tag. The interface offers a way to delete a given image or just edit the previously assigned tag.
+
 \begin{figure}[h]
   \begin{center}
     \subfigure{\label{fig:database}\fbox{\includegraphics[width=1\textwidth]{images/thumbnails.png}}}
   \end{center}
 \end{figure}
+Finally, we developed a view for the points that the algorithm finds in the ortorectified image. This view was implemented with open layers and shows information about the location of the potential damaged building in a human readable form. This is done by querying the google api with the latitude and longitude points extracted from the map.
 
 \begin{figure}[h]
   \begin{center}
@@ -67,16 +73,12 @@ By consuming the REST api described in the previous section, a simple web client
 
 Another simple front end application was developed to predict on new features, it is very similar to the tagging application. Instead of asking the user about the correct tag, it queries the model and exposes the answer to the front end.\\
 
-\section{Activation maps}
-
-It was shown by (the paper with discrimination zones) that if we use the layers before the fully connected layers, it is possible to extract zones which the network recognizes as to be prone to be for one of the classes.\\
-
-
-\section{Active learning}
 
 
 \section{Model creation}
 
-In order to create the model we need to select a sample from the thumbnails that we extracted from the original images. We wanted to create a process that was easily reproductible so we would compare models in a simple fashion. To this end the sample must be random each run and we need to split the images in three sets: training, validation and testing.
+In order to create the model we need to select a sample from the thumbnails that we extracted from the original images. We wanted to create a process that was easily reproductible so we would compare models in a simple fashion. To this end the sample must be random each run and we need to split the images in three sets: training, validation and testing.\\
+
+Tensorflow provides a script to retrain the last layer of inception by conecting the extracted features into a sofmax layer, and then training this classifier on the given set. It requires a directory layout tailored built to this purpose. The script was modified to fit our database design in order to make as easy as possible to train several models with homogeneous training, validation, and testing sets.
 
 
