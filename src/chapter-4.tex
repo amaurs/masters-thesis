@@ -37,15 +37,40 @@ The results obtained after applying t-sne, supports the proposed methodology of 
 
 In order to have an effective algorithm we need that it can perform well in places with images it has never seen before. To test this hipothesis we tried two different methodologies based on cross validation. First of all, classic n-fold cross validation was perform on the pool of training data generated for this experiment. This is, the training set was divided in $n$ subsets and then a model was trained using $n-1$ of those sets while the remaining one was used for testing the model. This was repeated n times leaving a different set each time for testing.
 
-\section{Threshold selection}
-
-The binary classifier assigns a real number in the interval $[0,1]$. To decide which values will be assigined with either level a threshold must be chosen. This was picked using a ROC curve. The ROC curve helps us chosing the performance that fits our needs in the ver possible way. For instance
-
-\section{How much is enough}
+\subsection{How much is enough}
 
 In this section we want to create a benchmark on how much images are needed to perform a retraining of the Inception network. What we wanted to achieve was to demonstrate that it is possible to obtain high accuracys using only a handful of images. We where able to test this by designing an experiment that measures the acurracy of models trained with different sizes of training sets and testing them in a common test set. 
 
-\section{Computer vision versus convolutional neural networks}
+\subsection{Computer vision versus convolutional neural networks}
+
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\label{fig:tsne}\fbox{\includegraphics[width=1\textwidth]{images/accuracies-12-3.png}}}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\label{fig:tsne}\fbox{\includegraphics[width=1\textwidth]{images/accuracies-13-2.png}}}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\label{fig:tsne}\fbox{\includegraphics[width=1\textwidth]{images/accuracies-23-1.png}}}
+  \end{center}
+\end{figure}
+
+
+\section{Threshold selection}
+
+The binary classifier assigns a real number in the interval $[0,1]$. To decide which values will be assigined with either level a threshold must be chosen. This was picked using a ROC curve. The ROC curve helps us chosing the performance that fits our needs in the ver possible way. In order to do this we use a receiver operating characteristic curve. This tool is often used with binary classifiers to analyse the tradeoff between the true possitive rate and the false possitive rate by selecting different desicion thresholds.
+
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\label{fig:tsne}\fbox{\includegraphics[width=1\textwidth]{images/roc.png}}}
+  \end{center}
+\end{figure}
 
 
 
