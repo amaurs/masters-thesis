@@ -89,7 +89,19 @@ The reason behind this decision was the high number of false positives shown in 
 
 Ortorectified mosaics where built by CENAPRED using the very same images taht we used to train our models. This images come in a different format than the images taken by the drones. Additional to the optical information these tif files contain geographical location and can be used to assing a point in space to each pixel in the image. This means that we can not only locate a damaged building in an image, but to link this information with a geographical location in a given projection.\\
 
-The images where divided in a regular grid of 299 pixel tiles with 90 pixel ovelaps. These overlaps are later postprocessed to eliminate the posibility of counting the same building twice. Each tile is exposed to the model which predicts a class on it using the previously selected threshold. 
+The images where divided in a regular grid of 299 pixel tiles with 90 pixel ovelaps. These overlaps are later postprocessed to eliminate the posibility of counting the same building twice. Each tile is exposed to the model which predicts a class on it using the previously selected threshold.
+
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    town & positives & width & height & time (seconds) \\ \hline
+    Santa Maria Xadani &25 & 25598 & 30144 & 300000 \\ \hline
+    Juchitan de Zaragoza &250 & 42375 & 28831 & 300000 \\ \hline
+    Union Hidalgo &50 & 19945 & 28795 & 300000 \\
+    \hline
+  \end{tabular}
+\end{center}
 
 
 
