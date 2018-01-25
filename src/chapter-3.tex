@@ -1,10 +1,37 @@
-In this chapter, we will talk about the implementation of our experiment. The details of the pipeline architecture, and the techniques used to obtain and curate data are unveiled. Details on the data munging and preprocessing are also given. The backend was implemented in Python, while the clients are implemented in javascript.\\
 
-\section{Ingest}
+To analyze a huge amount of images requires a better way of handling and sorting them than just storing them into directories. A set of scripts where built arround a database to let us create trainging and testing sets easilier. Borrowing ideas on how is the transfer learning process made by the engineers in the tensorflow team, our catalog system grew to answer to these needs. In a later stage the analysis process was also included into the system spawning what could become a framework to analyze visual patterns in sets of images with many different purposes.\\
+
+The development process showed the need of a better set of tools to overcome several difficulties that were found. The training stage involved a repetitive process consisting of manually inspecting the available imagery. To this end, a web application was built on top of our catalog system facilitating this process. The process of continuously showing and tagging images proved to be error prone, each mistakenly tagged picture, required to log into the database and delete the wrong entry after maching encoded file names. So a new feature was implemented into our tool, it shows the stored images and their respective tag and lets the user either delete or edit the classification. Finally, when the model was already trained and it was predicting on the orthorectified rasters, the ability to geolocate the predicted damaged areas and place them in a map was very convenient.\\
+
+As it was just exposed, the application was built thinking about the end user. Even though the correct implementation from a design perspective is out of the scope of this work, it was an interesting thing to explore as this would be the kind of problems to be solved in the case of getting such a system into production. The last few paragraphs explained how the system grew to a full server-client architecture to respond to the need of processing data and visualizing the results in a meaningful way.\\
+
+The purpose of this chapter, is to talk about the implementation of our experiment. Details of the pipeline architecture, and the techniques used to obtain and curate data are unveiled.\\
+
+\section{Backend}
+
+To understand why some design decision where made we need to understand the nature of our data. Data came in directories taken from the drones and splitted by flying dates. The quantity and naming of the images was not uniform across towns. Additionaly, drone imagery provide metadata that is useful to geolocate the images. However, this information is limited as it only offers the place where the image was taken but gives no information about the image resolution. This difficulty is overcome with specialized software that takes in the set of images and creates a mosaic using the images using a process known as orthorectification which corrects the distortions caused by the angle in which the image was taken. CENAPRED gave us both resources, the raw drone images and the ortorectified rasters. So the first part of the application was to transform these data into a way that would be easier to manage.\\
+
+Given to previous experience in developing similar projects, it was decided that the system was to be built on top of a Python Web framework. It offers many solutions out of the box, including a familiar line interface set of commands and an object relational mapper that makes the database integration easier. The feature of being ready to offer a web interface was a great plus.\\
+
+\subsection{Data model}
+
+We took advantage of the object relation mapper system that Django offers. In the figure we show a subset of the database diagram. Tables inherent to the features of the Django framework are not shown as they where not modified.\\
+
+The database design was based on reproducible reaseach. We wanted to keep track of the charactistics of the models trained. Also we wanted to know which where the training images used for each model. It was also desirable to be able to reuse models that where trained with different sets of images to benchmark and finally use the best model to actually predict on the orthorectified raster.\\
+
+
+In order for the tagging application to work, images must be ingested into the system so every time a new sample is tagged we populate the database with information about the original image and the coordinates relative to the original image. In the final stage of the process we produce a list of potential damaged buildings which are also inserted into the database with geografical information and human readable address. We think that this can be helpfull to allocate resources in the most efficient way.\\
+
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\label{fig:database}\fbox{\includegraphics[width=1\textwidth]{images/database.png}}}
+  \end{center}
+\end{figure}
 
 We built a system to ingest the images from the NOAA service. It lazily downloads the images by checking first if the file is already present in the temporary folder. If the file does not exist it downloads it, then the system tries to add it to the database and persistent file system. To maintain a coherent one to one mapping between the database and the file system, the process of adding a new scene must be successful both in the database and in the filesystem, otherwise, the file is erased from both, and the state of the system remains as it was before the ingestion attempt.\\
 
-\section{Tag}
+\subsection{Tag}
+
 
 Aerial tagged data is scarce. In particular, for the purpose of our experiment, we don't have any useful metadata on the images. We propose a method to tag samples of the scenes using crowd sourcing. We built a service that crops samples from the images and exposes them to an online application that lets any user with access to tag an image. We have three categories: the image has water in it, the image does not have water in it, and it is not possible to tell. When a positive answer is obtained, the system persists de image in the data base with the information of from which scene was it extracted.\\
 
@@ -15,15 +42,7 @@ Given the nature of our task, it is hard to acquire the tagged images. To increm
 
 The images were rotated by 10 degrees, and reflected by the x-axis and the y-axis this gives us a $x144$ factor, this means that for each tagged image, the training corpus is incremented by $144$ images. The problem with this approach is that when a square image is rotated, some information on the corners is lost so we have to adjust the original image so that we can still crop a complete square from the desired size from it. For our experiment, the input size for the neural network is $227\times 227$ pixels, so the original images must be at least $\sqrt{2}$ times $227$ on each side. This way no matter how we rotate the original image, we can still crop a $227\times 227$ from the center of the rotation without losing any data.\\
 
-\section{Database}
 
-In the figure we show a subset of the database diagram. Tables inherent to the features of the django framework are not shown. The database design was based on reproducible reaseach. We wanted to keep track of the charactistics of the models trained. Also we wanted to know which where the training images used for each model. In order for the tagging application to work, images must be ingested into the system so every time a new sample is tagged we populate the database with information about the original image and the coordinates relative to the original image. In the final stage of the process we produce a list of potential damaged buildings which are also inserted into the database with geografical information and human readable address. We think that this can be helpfull to allocate resources in the most efficient way.
-
-\begin{figure}[h]
-  \begin{center}
-    \subfigure{\label{fig:database}\fbox{\includegraphics[width=1\textwidth]{images/database.png}}}
-  \end{center}
-\end{figure}
 
 \section{Train}
 
