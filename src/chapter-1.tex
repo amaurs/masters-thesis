@@ -1,44 +1,45 @@
-In this chapter, we explore the motivation, objective and scope of the present work.\\
+Earthquakes are an unpredictable phenomena, which damaging capabilities can be catastrophic. Given the scarse natural resources, its correct allocation is vital to mitigate the damage in the aftermath. Technology makes the labours of logistics and rescue a lot easier. This chapter explores the motivation, history, objective and scope of the present work.\\
 
 
 \section{Motivation}
 
-In the National Commission for the Knowledge and Use of Biodiversity we use landcover maps to analyze and assess the evolution of the environment through time. We make this possible by leveraging classic classification algorithms and a large amount of computing power. While our efforts have been quite productive, these algorithms have certain limits, they rely on the use of the light spectrum. As a consequence, any two categories with similar spectrum footprint will, in all likelihood, confuse the classifier. Curiously enough, humans have little problem distinguish between some of these pairs of categories. For example, crops and grasslands might seem identical to a supervised classifier, but we can certainly tell the difference from one another. This is caused because our brains are not seeing particular pixels and trying to classify them one by one. Instead, our brains look at the whole picture, we focus on zones of the image an all of the information included in them, in other words, we care about context. Convolutional Neural Networks take this into account. Each neuron of the network cares only about a certain zone of the image when information flows through the layers of the network, there are certain neurons that activate upon certain stimuli. Taking context into account lets the network to recognize certain features that would be invisible to a classic classifier, for example: shapes and geometries. When we ask ourselves why it is so easy to differentiate crops from grasslands geometry comes as a natural answer. Crops have very particular shapes.\\
 
-The final objective is to build a comprehensive biodiversity monitoring system. It can be though as two independent efforts. One of these attemps is the Monitoring Activity Data for the Mexican REDD+ program (MADMex) \cite{rs6053923} which pretends to monitor the behavior of forest and vegetation across the country by processing satelitte imagery. Another effort is the Mexican National Biodiversity and Ecosystem Degradation Monitoring System (SNMB) \cite{GARCIAALANIZ201762} which gathers information about species in the different ecosystems that exist in Mexico.\\
+Massive collaboration proved to be a fundamental resource to face the aftermath caused by the earthquake of September 19, 2017 in Mexico City. The use of social networks allowed communication between rescue, logistics and civil society. Lessons were learned about the scope and limitations of this association.\\
 
-Segnet papers: \cite{DBLP:journals/corr/BadrinarayananK15} in \cite{DBLP:journals/corr/KendallBC15} they enhace their approach by extending their own architecture to include a Bayesian approach. The idea is to add a model of uncertainty to the CNN and use this information to get more acurrate guesses on each of the pixels. They report that this feature adds some improvement in the level of accuracy for many types of architectures not only their own SegNet.
+However, what happens when the conditions and technological infrastructure of large cities do not exist? This work explores other possibilities in which current technologies can help us when the situation in which the natural disaster occurs is different. Focusing on the study of images captured by drones during the days after the earthquake of September 7, 2017 in towns of the state of Oaxaca, an analysis framework that allows to detect damaged areas in an automated way is proposed.\\
 
+In order to do this, techniques are applied that allow the use of models that have been previously trained in gigantic infrastructures, adjusting them to our particular problem. This reduces the amount of resources needed, in both time and infrastructure, to obtain results with high accuracy. In the future, this will allow allocating efforts in a more agile and efficient manner.\\
 
-A wonderful introduction to neural networks in the context of remote sensing can be found in \cite{canty2014image}.
+\section{History}
 
-In the context of natural disasters other options have been considered \cite{Kryvasheyeue1500779}.\\
+Given to the particular geographical conditions, Mexico is very prone to seismic activity. The Cocos and the Rivera plates subduct below the North American plate, and the Pacific plate separates from the North American plate along the Baja California Gulf \cite{AG3315}.\\
 
-DeCAF paper talks about using the features extracted from a neural convolutional network to use in traditional methods. \cite{DBLP:journals/corr/DonahueJVHZTD13}\\
-
-This is another attempt that adds to the evidence that features engineered by the Neural Network work pretty good off the shelf. \cite{DBLP:journals/corr/RazavianASC14}\\
-
-Transfer learning is explored by Yosinski \textit{et al.} \cite{DBLP:journals/corr/YosinskiCBL14}. They propose to use an already trained architecture in new tasks by replacing diferent layers and retraining.\\
-
-In \cite{DBLP:journals/corr/LongSD14} they use the features extracted from the CNN to segment an image.\\
-
-The possibility of having a single model that can perfom correctly in many different tasks is explored in \cite{DBLP:journals/corr/KaiserGSVPJU17}\\
-
-A survey on disctint aspects of how transfer learning is used can be found in \cite{5288526}.\\
-
-The use of active learning together with semisupervised learning tenchniques is explored in \cite{7956153}.\\
-
-Need to take a look into \cite{DBLP:journals/corr/ChenPKMY14}\\
-
-Everardo suggested to look into the U net \cite{DBLP:journals/corr/RonnebergerFB15}.
+According to historical research there have been registry of these natural disasters since the Pre-Columbian age. The level of material damage, and the death toll has incresing ever since as the populucation and the cities grew. In figure \cite{fig:codice} we can see a pictogram that acording to \cite{sismosmexico} means "in the year 11 rabbit the earth trembled during the night".\\
 
 
-And the books: \cite{canty2014image}, \cite{richards2013remote}, \cite{tso2009classification} ,\cite{hastie01statisticallearning}
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\label{fig:codice}\fbox{\includegraphics[width=1\textwidth]{images/codice.jpg}}}
+  \end{center}
+\end{figure}
+
+The use of cartography to place the damage information also is useful not only to allocate resources in the aftermath of the disaster but also serves as historical evidence. In figure \cite{fig:quake1800} taken from \cite{AG3316} we can see the building that where damaged during an earthquake known as the *San Juan de Dios* earthquake \footnote{Back then the earthquakes where name acordingly to the day in which they happened.} that dates back to March 8, 1800, years before the Independence, during a age of economic and social prosperity.\\
+
+Important earthquakes ocurred in the years 1845 and 1858 one of which is theorized to have been even stronger than the infamous earthquake of September 19, 1985. Paradoxically, these events that hit the state of Oaxaca pretty badly didn't produced as much damage as recent ones due to the lack of stablished cities in the state back then.
+
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\label{fig:quake1800}\fbox{\includegraphics[width=1\textwidth]{images/quake1800.png}}}
+  \end{center}
+\end{figure}
+
 
 \section{Objective}
 
-It is a wondeful time to explore the use of novel technologies in all types of context. It is in human nature to create tools that revolutionize the way it modifies its envirmonment. We want to explore the use of Convolutional Neural Networks in the context of landcover classification. We believe that this field is very promising and will bloom in the next years. By appliying this methods we hope to obtain results that match the ones that we are already getting with classic methods. In Mexico, the National Institute of Statistics and Geography has been in charge of producing periodical maps about urban settlements in the country. However, it is hard to keep track of irregular settlements and it is often prohibitely costly to create these maps from on-site visits. We want to offer a cheap and innovative alternative to detect and index urban areas using the inexpensive satellite imagery that is available.\\
+It is a wondeful time to explore the use of novel technologies in all types of context. It is in human nature to create tools that revolutionize the way it modifies its envirmonment. We want to explore the use of Convolutional Neural Networks in the context of landcover classification. We believe that this field is very promising and will bloom even more in the comming years. 
 
 \section{Scope}
 
-It would be far too ambitious to cover every topic that is involved in the process of the classification using CNNs. We want to explain how do the networks work to a certain extent, but it is not in the scope of this work to untangle every single detail. In the same fashion, the field of Remote Sensing is far too big to be explored in this work. We assume a certain degree of knowledge in related topics and we expose some mathematical details in the appendix. As we already mentioned, the field of Computer Vision is in its climax. Reviewing every single article that has been writen would be a daunting task. We offer a brief literature review that gives some context about the state-of-the art and we hope to build upon ideas and efforts done by a miryad of people. We aimed to built a system capable of procesing imagery and that could be deployed into a cluster for efficient computation. We had in mind to offer a wall-to-wall product of the Mexican landscape.\\
+It would be far too ambitious to cover every topic that is involved in the process of the classification using CNNs. We want to explain how do the networks work to a certain extent, but it is not in the scope of this work to untangle every single detail. In the same fashion, the field of Remote Sensing is far too big to be explored in this work. We assume a certain degree of knowledge in related topics and we expose some mathematical details in the appendix.\\
+
+As we already mentioned, the field of Computer Vision is in its climax. Reviewing every single article that has been writen would be a daunting task. We offer a brief literature review that gives some context about the state-of-the art and we hope to build upon ideas and efforts done by a miryad of people. We aimed to built a system capable of procesing imagery and that could be deployed into a cluster for efficient computation.\\

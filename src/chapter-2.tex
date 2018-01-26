@@ -18,7 +18,34 @@ The use of CNNs in the context of landcover classification was explored by Kussu
 
 The usual approach with landcover classification is the use of classical classification methods such as support vector machines (SVM) and random forests (RF). In order to improve the performance, features must be handcrafted from the original bands. In \cite{7858676}, Grant \textit{et al.} explore the use of Transfer Learning and Data Augmentation in the context of remote sensing images. By exploring well-known high-resolution datasets, they obtain state of the art results.\\
 
-Transfer Learning (TF) is the process of using an already trained CNN, to 
+Transfer Learning (TF) is the process of using an already trained CNN, to Segnet papers: \cite{DBLP:journals/corr/BadrinarayananK15} in \cite{DBLP:journals/corr/KendallBC15} they enhace their approach by extending their own architecture to include a Bayesian approach. The idea is to add a model of uncertainty to the CNN and use this information to get more acurrate guesses on each of the pixels. They report that this feature adds some improvement in the level of accuracy for many types of architectures not only their own SegNet.
+
+
+A wonderful introduction to neural networks in the context of remote sensing can be found in \cite{canty2014image}.
+
+In the context of natural disasters other options have been considered \cite{Kryvasheyeue1500779}.\\
+
+DeCAF paper talks about using the features extracted from a neural convolutional network to use in traditional methods. \cite{DBLP:journals/corr/DonahueJVHZTD13}\\
+
+This is another attempt that adds to the evidence that features engineered by the Neural Network work pretty good off the shelf. \cite{DBLP:journals/corr/RazavianASC14}\\
+
+Transfer learning is explored by Yosinski \textit{et al.} \cite{DBLP:journals/corr/YosinskiCBL14}. They propose to use an already trained architecture in new tasks by replacing diferent layers and retraining.\\
+
+In \cite{DBLP:journals/corr/LongSD14} they use the features extracted from the CNN to segment an image.\\
+
+The possibility of having a single model that can perfom correctly in many different tasks is explored in \cite{DBLP:journals/corr/KaiserGSVPJU17}\\
+
+A survey on disctint aspects of how transfer learning is used can be found in \cite{5288526}.\\
+
+The use of active learning together with semisupervised learning tenchniques is explored in \cite{7956153}.\\
+
+Need to take a look into \cite{DBLP:journals/corr/ChenPKMY14}\\
+
+Everardo suggested to look into the U net \cite{DBLP:journals/corr/RonnebergerFB15}.
+
+
+And the books: \cite{canty2014image}, \cite{richards2013remote}, \cite{tso2009classification} ,\cite{hastie01statisticallearning}
+
 
 \subsection{Data augmentation}
 
