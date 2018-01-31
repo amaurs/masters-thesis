@@ -1,28 +1,34 @@
-This chapter elaborates on how the model was trained and compared with other techniques from classical computer vision. 
+The process that our experiment undertook was iterative. Obstacles in the analysis showed the need to develop tools that help us to make the process less cumbersome. In the same way that in the previous chapter we explored the flow of ideas that led to our pipeline design, here we will explain how data shaped our experimental process.\\
+
+To have a complete picture of how does our approach compares with techniques from classical computer vision, we trained other models to test their performance against our novel approach.\\
 
 \section{Exploratory analysis}
 
-Drone images from three different towns in the state of Oaxaca where obtained from the National Center for Disaster Prevention (CENAPRED). This pictures where taken during the week following an earthquake that originated in the Pacific coast of the state. We have 727 images from Santa Maria Xadani, 1872 from Union Hidalgo, and 1134 images from Juchitan of Zaragoza. As we can see in the following figures, the drones fly in a regular pattern forming a lattice of points where the images are taken. It is natural to think that given the spatial distribution, that the images are spatialy clustered. We wanted to show that this clustering translates to the space of the information that the images contain. In order to do this, a usual technique was applied to our set of images.
+Drone images from three different towns in the state of Oaxaca where obtained from CENAPRED. During the week following the Chiapas earthquake of September 7, 2018, several drones took these pictures. We received 727 images from Santa Maria Xadani, 1872 from Union Hidalgo, and 1134 from Juchitan of Zaragoza.\\
 
-\begin{figure}[h]
+As we can see in the following figures, drones fly in a regular pattern forming a lattice of points. It is natural to think that given the spatial distribution, that the images distribute among clusters, in other words, there exists a certain degree of similarity. We wanted to show that this clustering translates to the space of information that the images contain. To do this, we used a usual technique to our set of images.\\
+
+\subsection{T-distributed stochastic neighbor embedding}
+
+In the interest of being able to represent the images in a two-dimensional structure, we used a technique known as t-distributed stochastic neighbor embedding (t-SNE) analysis. It was proposed by Laurens van der Maaten \cite{t-sne}, as an alternative to traditional methods that were difficult to optimize. It usually captures the underlying structure of a set of images, and it is useful when the data lies in different, but low dimensional manifolds.\\
+
+In our case we expected the images of the different towns to cluster in this low dimensional representation. We thought that pictures taken under in the same town would be closer than the ones taken in a different setting because of the light conditions during the exposure tend to have less variance among similar times and places. To this end, the information from the pixels of each image was flattened into a vector comprising the means and standard deviations. This simple dimensionality reduction technique was used to embed the images into a lower dimensional space. As we expected, images form natural clusters depending on the town that they depict. Our result is shown in Figure \cite{fig:tsne}.\\
+
+The outcome obtained after applying t-SNE supported our proposed methodology of using images from one town and try to predict on others. The application detailed in the previous chapter was used to crop and classify 100 square patches from the images in each of the towns. Each piece was 327 x 327 pixels, and a tag was assigned manually by the author in each of them.\\
+
+
+\begin{figure}[t]
   \begin{center}
-    \subfigure{\label{fig:tsne}\fbox{\includegraphics[width=1\textwidth]{images/juchitan.png}}}
+    \subfigure{\includegraphics[width=4.25in]{images/juchitan.png}}
+    \subfigure{\includegraphics[width=4.25in]{images/xadani.png}}
+    \subfigure{\includegraphics[width=4.25in]{images/union.png}}
   \end{center}
+  \caption{Geographical location of the pictures. From top to bottom we have Juchitan de Zaragoza, Santa Maria Xadani, and Union Hidalgo.}
+  \label {fig:tsne}
 \end{figure}
 
-\begin{figure}[h]
-  \begin{center}
-    \subfigure{\label{fig:tsne}\fbox{\includegraphics[width=1\textwidth]{images/xadani.png}}}
-  \end{center}
-\end{figure}
 
-\begin{figure}[h]
-  \begin{center}
-    \subfigure{\label{fig:tsne}\fbox{\includegraphics[width=1\textwidth]{images/union.png}}}
-  \end{center}
-\end{figure}
 
-A t-sne analysis was performed with the images, and it is shown in the figure. To this end, the information from the pixels of each images was flattened into a vector comprising the means and standard deviations. This was a simple dimensionality reduction technique and was useful to embed the images into a lower dimensional space. As we can see, images form natural clusters depending on the town that they where taken from. This was somewhat expected because of the light conditions during the exposure tend to have less variance among similar times and places.
 
 
 \begin{figure}[h]
@@ -31,11 +37,16 @@ A t-sne analysis was performed with the images, and it is shown in the figure. T
   \end{center}
 \end{figure}
 
-The results obtained after applying t-sne, supports the proposed methodology of using images from one town, and try to predict on others. Due to the lack of training data, this was needed to be generated from the sample data. The application detailed in the previous chapter was used to crop and classify $100$ square patches from the images in each of the towns. Each patch was $327\times 327$ and a tag was assigined manualy by the author in each of them.
 
 \section{Model validation}
 
-In order to have an effective algorithm we need that it can perform well in places with images it has never seen before. To test this hipothesis we tried two different methodologies based on cross validation. First of all, classic n-fold cross validation was perform on the pool of training data generated for this experiment. This is, the training set was divided in $n$ subsets and then a model was trained using $n-1$ of those sets while the remaining one was used for testing the model. This was repeated n times leaving a different set each time for testing.
+We want to train a model to be a faithful representation of the phenomena that we study, but ¿How do we know that this description is correct? We need to validate the relationship between the outcome of the model and the data that we have at hand. This process is complicated. Validation must be carefully crafted to obtain valid results.\\
+
+Even though deep learning has allowed us to do a giant leap forward on the performance of several tasks, and contrary to what some researchers claim \cite{DBLP:journals/corr/KaiserGSVPJU17}, there exists no universal model. A good model would be able to be performant in very different settings, but it won't be able to handle every situation. We need our model to be robust, but we can not expect it to be perfect. Being aware of the limitations intrinsic to the model is the best way to alleviate possible mistakes. Although it sometimes seems the case, deep learning is not a magic box, it learns from the data that we supply. If the model is biased, in all likelihood, it means that our training set is biased.\\
+
+To have an efficient algorithm we need it to be performant with places and images it has never seen before. A classic approach would be to divide the dataset into two parts; training and testing sets, the model is trained with the former, and then tested against the latter. This method is not used in practice because data is usually scarce and we would like to take the most of it. A better option is $n-fold$ crossed-validation in which we repeat a similar $n$ times and average the outcomes. This process makes more likely to train the model with every data point and average errors that may appear by chance. However, $n-fold$ crossed-validation does not suit our case because of the nature of the data. Our images were tagged manually; it was the case for some buildings to appear several times in the dataset even though the cropped pictures were not the same. If we apply a technique such as cross-validation, it would be very likely to have the same building both in the training and in the testing sets. This situation would lead to having very high accuracies for our model but not such good performance in a real setting. Another thing to be considered is that while traditional supervised classification methods need to divide the dataset into two parts to perform the validation, machine learning methods often require three sets instead, namely train, validation,  and test. The validation test is used during the training stage to select the best performing algorithm, and the testing set is used to see how our model deals with previously unseen data. We manage to elegantly avoid the problem of having repeated data on each of the datasets by using the fact of having information from three completely different settings.\\
+
+To test our model we proposed two different approaches depending on the type of classification involved. With the supervised approaches, images from two towns were used to train the models, and then the remaining one served as test data. In the case of the transfer learning technique, we used one for training, another for validation, and the last one to test the model. This process was repeated in all possible combinations and the accuracies where averaged at the end.\\
 
 \subsection{How much is enough}
 
@@ -90,8 +101,6 @@ The reason behind this decision was the high number of false positives shown in 
 Ortorectified mosaics where built by CENAPRED using the very same images taht we used to train our models. This images come in a different format than the images taken by the drones. Additional to the optical information these tif files contain geographical location and can be used to assing a point in space to each pixel in the image. This means that we can not only locate a damaged building in an image, but to link this information with a geographical location in a given projection.\\
 
 The images where divided in a regular grid of 299 pixel tiles with 90 pixel ovelaps. These overlaps are later postprocessed to eliminate the posibility of counting the same building twice. Each tile is exposed to the model which predicts a class on it using the previously selected threshold. When the model test a tile positive, the box is saved for postprocesing in which a technique known as non max suppression is used to eliminate boxes that represent the same object. This technique is borrowed from facial recognition algorithms. Once we have the final boxes, the center pixel of each box is transformed to world coordinates. Additionaly, this coordinates are used to query Google Maps API to obtain a human readable address for each point.
-
-RT
 
 
 \begin{center}
