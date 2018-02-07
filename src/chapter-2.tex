@@ -2,7 +2,7 @@ In this chapter, we talk about the state of the art in computer vision and how i
 
 
 
-A wonderful introduction to neural networks in the context of remote sensing can be found in \cite{canty2014image}. It reviews all the necesary mathematical tooling to deal with the processing image algorithms, and implements the algorithms in Python. 
+A wonderful introduction to neural networks in the context of remote sensing can be found in \cite{canty2014image}. It reviews all the necesary mathematical tooling to deal with the processing image algorithms, and implements the algorithms in Python. A survey on disctint aspects of how transfer learning is used can be found in \cite{5288526}.\\
 
 In the context of natural disaste rs other options have been considered. For example Kryvasgeteue et. al. use the twitter activty during  Hurricane Sandy to build a model. They found that social media activity is related with the proximity of the region in which the Hurracane hits\cite{Kryvasheyeue1500779}. Nevertheless, the mention that the nature of the data available both in quantity and quality is rather unususal in part because of the severity and magnitude of damage that the Hurricane Sandy brought about.\\
 
@@ -11,30 +11,18 @@ The idea of using features crafted by a neural network has been widely explored.
 They took the activations from the $n^{th}$ hidden layer, the layer previous to the fully connected one, and use them to train two classifiers: a logistic regression, and a support vector machine, in four different environments: object recognition, domain adaptation, subcategory recognition and scene recognition. Object recognition tested the ability of the classifier to correctly assign a class to a given image. They showed that the depth of the layer dramatically improves the performance of the features. Domain adaptaion consist of testing the robustness of the classifier when the source of the image varies, in this case they use a testing set consisting of images of office objects taken from Amazon, a webcam and a Dslr camera. The classifiers where able to cluster the objects across domains regardless of the origin of the images. In subcategory recognition, the task at hand is to differenciate individual categories inside a super-category, for example discriminate among two types of birds using a training set consisting only of images of birds. They found that without further fine tuning, the features extracted from the neural network achieved accuracies far superior to the ones available in the literature at the time. Finally, they tested the extracted features at the task of semantical classification. Instead of requiring the classifier to give a category of the object in the picture, the classifier must semantically classify the scene instead. This is considered a very difficult task, and the previous approach at the moment was to use hand-engineered features and a multi-kernel learning baseline. While the accuracies reported by this task where quite low, they improved the existing benchmark which provides strong evidence that the features extracted from the deeper layers of a CNN excel at extracting information from the images even though the network was not design for any of these tasks. Additionaly they developed an open source framework that later matured into Caffe \cite{jia2014caffe}, a framework designed to train CNN models.\\
 
 
-
-
-
 In another attempt that adds to the evidence that features engineered by the Neural Network work pretty good off the shelf, Razavian {et al.} \cite{DBLP:journals/corr/RazavianASC14} use features extracted from the CNN \texttt{OverFeat} model which was made public by Le Cun \textit{et al.} \cite{DBLP:journals/corr/SermanetEZMFL13}. In the original article, they exploring the advantages of training a network simultaneously for several tasks in this case: classify, locate and detect objects in images. Razavian {et al.} experiment with these features to perform classification in tasks that gradually move away from the one for what \texttt{OverFeat} excell. Thet tested the features extracted from the CNN model together with a traditional support vector machine in the tasks of: image classification, fine grained recognition, attribute detection, and visual instance retrieval. They found that the CNN proved to be a strong competitor against more sofisticated methods involving handmade features.\\
 
-Transfer learning consists of using the knowledge adquired by a model during a training phase to another domain of knowledge. It is explored by Yosinski \textit{et al.} in \cite{DBLP:journals/corr/YosinskiCBL14}. They propose to use an already trained architecture in new tasks by replacing diferent layers and retraining only the topmost layers. \\
-
-In \cite{DBLP:journals/corr/LongSD14} they use the features extracted from the CNN to segment an image.\\
-
-The possibility of having a single model that can perfom correctly in many different tasks is explored in \cite{DBLP:journals/corr/KaiserGSVPJU17}\\
-
-A survey on disctint aspects of how transfer learning is used can be found in \cite{5288526}.\\
-
-The use of active learning together with semisupervised learning tenchniques is explored in \cite{7956153}.\\
-
-Need to take a look into \cite{DBLP:journals/corr/ChenPKMY14}\\
-
-Everardo suggested to look into the U net \cite{DBLP:journals/corr/RonnebergerFB15}.
+Transfer learning consists of using the knowledge adquired by a model during a training phase to another domain of knowledge. It is explored by Yosinski \textit{et al.} in \cite{DBLP:journals/corr/YosinskiCBL14}. They propose to use an already trained architecture in new tasks by replacing diferent layers and retraining only the topmost layers. An experiment was designed to test the transfereability of different layers. They found strong evidence that sugest that even thought the training sets are of different nature, features transfered from different tasks improve the performance of the CNN against random weights. To perform their experiment, they used ImageNet \cite{Deng09imagenet:a} spliting the dataset obtaining two different groups of images. They also found that that the transfereability is negatively affected by the deepness of the layers, mening that higher layer features are specialized to the given task. This ideas gave us a clear starting point for the task in our hands.\\
 
 
-And the books: \cite{canty2014image}, \cite{richards2013remote}, \cite{tso2009classification} ,\cite{hastie01statisticallearning}
+Image segmentation is another task that has been explored using neural networks. The idea is to obtain a semantic partition of the images. In our case it would be desirable to have a heat map that can separate the damaged buildings from the rest of the elements of the image. In \cite{DBLP:journals/corr/LongSD14} they use the features extracted from the CNN to segment such an image. The architectures of several classification networks were modified into fully convolutional networks, and the fetures learned were fine-tuned for the segmentation task. This process is very promising for the field of Remote Sensing where thec classification features are engineered by using traditional methods such as manipulating the image information without taking into account the semantic context. This topic has also been explored in other topics such as biomedicine \cite{DBLP:journals/corr/RonnebergerFB15}.\\
+
+The possibility of having a single model that can perfom correctly in many different tasks is explored in \cite{DBLP:journals/corr/KaiserGSVPJU17}. Kaiser \textit{et al.} aimed to create a single model capable of performing well in very different tasks. They noticed that while CNNs give impresive results in a variaty of tasks, the training efforts are to be repeated for every situation. They created an architecture capable of receiving training data from 8 different corporea. Ranging from image classification to language translation and natural language processing, the tasks in hand are far appart from each other. Given the very different nature of the training data, enconders needed to be created to transform it into a joint representation space. Several tasks such as translation from English to German and translation from French to English shared the same encoders promoting stronger generalization of the features. While not achieving state of the art results in any of the tasks, they found that it is indeed possible to train a universal CNN for different tasks. The domains in which the data is limited are benefited with the joint training while the other tasks suffer of little or no loss in acurracy at all.\\
 
 
 
+The use of active learning together with semisupervised learning tenchniques is explored in \cite{7956153}. Zhou and Prasad used an idea known as active learning to improve the performance of a classifier taking the most of small labeled datasets.\\
 
 \section{Computer vision}
 
