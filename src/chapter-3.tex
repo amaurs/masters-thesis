@@ -19,6 +19,14 @@ We took advantage of the object relation mapper system that Django offers. In th
 
 The database design was based on reproducible reaseach. We wanted to keep track of the charactistics of the models trained. Also we wanted to know which where the training images used for each model. It was also desirable to be able to reuse models that where trained with different sets of images to benchmark and finally use the best model to actually predict on the orthorectified raster.\\
 
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\includegraphics[width=1\textwidth]{images/ingest-diagram.png}}
+  \end{center}
+  \label{fig:ingest}
+  \caption{We download images from a ftp that CENPRED gave us access to.}
+\end{figure}
+
 
 In order for the tagging application to work, images must be ingested into the system so every time a new sample is tagged we populate the database with information about the original image and the coordinates relative to the original image. In the final stage of the process we produce a list of potential damaged buildings which are also inserted into the database with geografical information and human readable address. We think that this can be helpfull to allocate resources in the most efficient way.\\
 
@@ -35,6 +43,14 @@ We built a system to ingest the images from the NOAA service. It lazily download
 
 Aerial tagged data is scarce. In particular, for the purpose of our experiment, we don't have any useful metadata on the images. We propose a method to tag samples of the scenes using crowd sourcing. We built a service that crops samples from the images and exposes them to an online application that lets any user with access to tag an image. We have three categories: the image has water in it, the image does not have water in it, and it is not possible to tell. When a positive answer is obtained, the system persists de image in the data base with the information of from which scene was it extracted.\\
 
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\includegraphics[width=1\textwidth]{images/tag-diagram.png}}
+  \end{center}
+  \label{fig:tag}
+  \caption{The application allows the user to tag new images and edit previously tagged ones.}
+\end{figure}
+
 
 \section{Data augmentation}
 
@@ -48,9 +64,22 @@ The images were rotated by 10 degrees, and reflected by the x-axis and the y-axi
 
 We needed data to train our model. Raw dron images where obtained from the National Center for Disaster Prevention (CENAPRED). Drons flew over three towns in the state of Oaxaca producing $3733$ images during several days. Images contain gps information about the place where they where taken, however, it is not posible to produce a one to one mapping from the pictures to georeferenced points. With this limitation it was not possible to locate possible damaged buildings from the raw images. However, the model does not need any geografical information to be trained as it relies only in the pixel intensities.
 
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\includegraphics[width=1\textwidth]{images/train-diagram.png}}
+  \end{center}
+  \label{fig:train}
+  \caption{The model is trained using the previously created dataset.}
+\end{figure}
+
+
 Cropping and tagging manualy a large number of samples from the images was prohibitive. In order to overcome this obstacle an online tagging application was developed for this purpose. The idea was to decentralize the tagging procedure by giving an easy to use tool that was able to run from any browser. This way the cumbersome task of tagging the images can be crowdsourced.
 
 By consuming the REST api described in the previous section, a simple web client was developed using jquery and openlayers. The interface is an image viewer with a selection and a button to submit an opition on that the higlighted area. The user will select an appropiate section of the given image, tag it, and then submit the section. In the backend, the image is cropped and ingested into the database.
+
+
+
+
 
 \begin{figure}[h]
   \begin{center}
@@ -92,6 +121,14 @@ Finally, we developed a view for the points that the algorithm finds in the orto
 
 Another simple front end application was developed to predict on new features, it is very similar to the tagging application. Instead of asking the user about the correct tag, it queries the model and exposes the answer to the front end.\\
 
+
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\includegraphics[width=1\textwidth]{images/predict-diagram.png}}
+  \end{center}
+  \label{fig:predict}
+  \caption{The system is prepared to predict on new data and display a map with the places in which it founds damaged buildings.}
+\end{figure}
 
 
 \section{Model creation}
