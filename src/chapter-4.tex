@@ -52,6 +52,45 @@ To test our model we proposed two different approaches depending on the type of 
 
 In this section we want to create a benchmark on how much images are needed to perform a retraining of the Inception network. What we wanted to achieve was to demonstrate that it is possible to obtain high accuracys using only a handful of images. We where able to test this by designing an experiment that measures the acurracy of models trained with different sizes of training sets and testing them in a common test set. 
 
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    Train                  &Test                   &Validate               & Code \\ \hline
+    Uni\'on Hidalgo        &Juchit\'an de Zaragoza &Santa Mar\'ia Xadani   &U-J-S \\ \hline
+    Uni\'on Hidalgo        &Santa Mar\'ia Xadani   &Juchit\'an de Zaragoza &U-S-J \\ \hline
+    Juchit\'an de Zaragoza &Uni\'on Hidalgo        &Santa Mar\'ia Xadani   &J-U-S \\ \hline
+    Juchit\'an de Zaragoza &Santa Mar\'ia Xadani   &Uni\'on Hidalgo        &J-S-U \\ \hline
+    Santa Mar\'ia Xadani   &Uni\'on Hidalgo        &Juchit\'an de Zaragoza &S-U-J \\ \hline
+    Santa Mar\'ia Xadani   &Juchit\'an de Zaragoza &Uni\'on Hidalgo        &S-J-U \\ 
+    \hline
+  \end{tabular}
+\end{center}
+
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+         &20 Images &50 Images &100 Images&150 Images&200 Images\\ \hline
+    U-J-S&0.9 &0.94&0.93&0.92 &0.94  \\ \hline
+    U-S-J&0.55&0.66&0.77&0.84 &0.81  \\ \hline
+    J-U-S&0.8 &0.82&0.85&0.847&0.895 \\ \hline
+    J-S-U&0.65&0.78&0.77&0.82 &0.78  \\ \hline
+    S-U-J&0.75&0.72&0.83&0.833&0.86  \\ \hline
+    S-J-U&0.7 &0.78&0.86&0.9  &0.895 \\ 
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{figure}[h]
+  \begin{center}
+    \subfigure{\includegraphics[width=1\textwidth]{images/validation-plot.png}}
+  \end{center}
+  \label{fig:validaton-plot}
+  \caption{Results of our experiment. As we expected, the graph shows a positive correlation between the accuracy and the number of training samples.}
+\end{figure}
+
+
 \subsection{Computer vision versus convolutional neural networks}
 
 \begin{figure}[h]
@@ -106,10 +145,10 @@ The images where divided in a regular grid of 299 pixel tiles with 90 pixel ovel
 \begin{center}
   \begin{tabular}{|c|c|c|c|c|c|}
     \hline
-    town & positives & width & height & time (seconds) & overlap\\ \hline
-    Santa Maria Xadani &51 & 25598 & 30144 & 4420 & 0.1 \\ \hline
-    Juchitan de Zaragoza &302 & 42375 & 28831 & 6375 & 0.1 \\ \hline
-    Union Hidalgo &25 & 19945 & 28795 & 3938 & 0.1\\
+    town                 & positives & width & height & time (seconds) & overlap\\ \hline
+    Santa Maria Xadani   &51         & 25598 & 30144  & 4420           & 0.1 \\ \hline
+    Juchitan de Zaragoza &302        & 42375 & 28831  & 6375           & 0.1 \\ \hline
+    Union Hidalgo        &25         & 19945 & 28795  & 3938           & 0.1\\
     \hline
   \end{tabular}
 \end{center}
