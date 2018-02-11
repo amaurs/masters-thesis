@@ -48,6 +48,21 @@ To have an efficient algorithm we need it to be performant with places and image
 
 To test our model we proposed two different approaches depending on the type of classification involved. With the supervised approaches, images from two towns were used to train the models, and then the remaining one served as test data. In the case of the transfer learning technique, we used one for training, another for validation, and the last one to test the model. This process was repeated in all possible combinations and the accuracies where averaged at the end.\\
 
+
+
+\begin{center}
+  \begin{tabular}{|c|c|c|}
+    \hline
+    Train                  &Test                                           &Code \\ \hline
+    Uni\'on Hidalgo        &Juchit\'an de Zaragoza, Santa Mar\'ia Xadani   &U-JS \\ \hline
+    Juchit\'an de Zaragoza &Santa Mar\'ia Xadani, Uni\'on Hidalgo          &J-SU \\ \hline
+    Santa Mar\'ia Xadani   &Juchit\'an de Zaragoza, Uni\'on Hidalgo        &S-JU \\ 
+    \hline
+  \end{tabular}
+\end{center}
+
+
+
 \subsection{How much is enough}
 
 In this section we want to create a benchmark on how much images are needed to perform a retraining of the Inception network. What we wanted to achieve was to demonstrate that it is possible to obtain high accuracys using only a handful of images. We where able to test this by designing an experiment that measures the acurracy of models trained with different sizes of training sets and testing them in a common test set. 
