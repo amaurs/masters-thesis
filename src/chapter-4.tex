@@ -1,12 +1,15 @@
-The process that our experiment undertook was iterative. Obstacles in the analysis showed the need to develop tools that help us to make the process less cumbersome. In the same way that in the previous chapter we explored the flow of ideas that led to our pipeline design, here we will explain how data shaped our experimental process.\\
+The process that our experiment undertook was iterative. Obstacles in the analysis showed the need to develop tools that helped us to make the process less cumbersome. In the same way that in the previous chapter we explored the flow of ideas that led to our pipeline design, here we will explain how data shaped our experimental process.\\
 
-To have a complete picture of how does our approach compares with techniques from classical computer vision, we trained other models to test their performance against our novel approach.\\
+The purpose of training a model, is to provide a faithful representation of the  studied phenomena, but how do we know that this description is correct? We need to validate the relationship between the outcome of the model and the data that we have at hand. This process is complicated. Validation must be carefully crafted to obtain valid results.\\
+
+To have a complete picture of how does our approach compares with techniques from classical computer vision, we trained other models to test their performance against our novel approach. This exercise gave us some insight on the feasibility of a real world implementation.\\
+
 
 \section{Exploratory analysis}
 
-Drone images from three different towns in the state of Oaxaca where obtained from CENAPRED. During the week following the Chiapas earthquake of September 7, 2018, several drones took these pictures. We received 727 images from Santa Maria Xadani, 1872 from Union Hidalgo, and 1134 from Juchitan de Zaragoza.\\
+During the week following the Chiapas earthquake of September 7, 2017, several drones captured images from three different towns in the state of Oaxaca. We obtained those images from CENAPRED. The ensemble consisted of 1134 images from Juchit\'an de Zaragoza (Figure \ref{fig:juchitan}), 727 images from Santa Mar\'ia Xadani (Figure \ref{fig:santamaria}), and 1872 images from Uni\'on Hidalgo (Figure \ref{fig:union}).\\
 
-\begin{figure}[!ht]
+\begin{figure}[!h]
   \centering
     \begin{subfigure}{.8\textwidth}
         \includegraphics[width=\textwidth]{images/juchitan-satellite.jpg}
@@ -18,7 +21,7 @@ Drone images from three different towns in the state of Oaxaca where obtained fr
   \label{fig:juchitan}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[!h]
   \centering
     \begin{subfigure}{.8\textwidth}
         \includegraphics[width=\textwidth]{images/santamaria-satellite.jpg}
@@ -30,7 +33,7 @@ Drone images from three different towns in the state of Oaxaca where obtained fr
   \label{fig:santamaria}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[!h]
   \centering
     \begin{subfigure}{.8\textwidth}
         \includegraphics[width=\textwidth]{images/union-satellite.jpg}
@@ -42,24 +45,28 @@ Drone images from three different towns in the state of Oaxaca where obtained fr
   \label{fig:union}
 \end{figure}
 
-As we can see in the Figures \ref{fig:juchitan}, \ref{fig:santamaria}, and \ref{fig:union}, drones fly in regular patterns forming a lattice of points. It is natural to think that given the spatial distribution, that the images distribute among similar clusters. First, we wanted to show that this clustering translates to the space of information that the images contain. To do this, we used a technique for our set of pictures known as t-distributed stochastic neighbor embedding. It was first introduced by Laurens van der Maaten \cite{t-sne}, as an alternative to traditional methods that were difficult to optimize.\\
+As we can see from Figures \ref{fig:juchitan}, \ref{fig:santamaria}, and \ref{fig:union}, drones fly in regular patterns forming a lattice of points, these clouds of information distribute spatially around the towns of interest. We wanted to show that this clustering translates to the space of information that the images contain. To do this, we used a technique known as t-Distributed Stochastic Neighbor Embedding (t-SNE), introduced by Laurens van der Maaten \cite{t-sne}, as an alternative to traditional methods that were difficult to optimize given the computational costs.\\
 
-In the interest of being able to represent the images in a two-dimensional structure, we used a technique known as t-distributed stochastic neighbor embedding (t-SNE) analysis. It usually captures the underlying structure of a set in a high dimensional space, and it is useful when the data lies in different, but low dimensional manifolds.\\
+The interest of being able to represent the images in a two-dimensional structure comes from the idea of simplifying things for better understanding. High dimensional data usually lies in hidden low dimensional manifolds, techniques like t-SNE gives us insights about this underlying structure. The reason that we chose this method instead of a Principal Component Analysis was that t-SNE is particularly well suited for embedding a high dimensional space into a two dimensional one.\\
 
-In our case we expected the images of the different towns to cluster in this low dimensional representation. We thought that pictures taken under in the same town would be closer than the ones taken in a different setting because of the light conditions during the exposure tend to have less variance among similar times and places. To this end, the information from the pixels of each image was flattened into a vector comprising the means and standard deviations. This simple dimensionality reduction technique was used to embed the images into a lower dimensional space using the aforementioned technique. As we expected, images form natural clusters depending on the town that they depict. Our result is shown in Figure \ref{fig:tsne}.\\
+We expected the images of the different towns to cluster in this low dimensional representation. We thought that pictures taken under in the same town would be closer than the ones taken in a different setting because of the light conditions during the exposure tend to have less variance among similar times and places.\\
 
-\begin{figure}[h]
+One limitation that we found was that the size of the images\footnote{Raw images are $4000\times3000$ pixels, and three color channels each.} prevented us from computing the t-SNE for them. To overcome this problem, the information from the pixels of each image was flattened into a vector comprising the means and standard deviations for each color channel. This simple dimensionality reduction technique allowed us to use the aforementioned technique. As we expected, images form natural clusters depending on the town that they depict. We show our results in Figure \ref{fig:tsne}. This outcome adds to evidence that supports a methodology of using images from one town and try to predict on others to see how well does the model generalizes.\\
+
+\begin{figure}[!h]
   \centering
-  \includegraphics[width=1\textwidth]{images/t-sne.png}
+  \includegraphics[width=1\textwidth]{images/t-sne-bis.png}
   \caption{T-sne diagram.}
   \label{fig:tsne}
 \end{figure}
 
-The outcome obtained after applying t-SNE adds to evidence that supports our proposed methodology of using images from one town and try to predict on others.\\
+\section{Experiment}
 
-We used the application detailed in the previous chapter to crop and classify 100 square patches from the images in each of the towns. Each piece was 327 x 327 pixels, and a tag was assigned manually for each of them. The information was stored in the relational database and reviewed for data consistency.\\
+We needed a benchmark to test the effectiveness of our method. To this end, we used classic computer vision methods on our dataset. We extracted simple features from the images, and then we trained a classification model on the resulting data\footnote{Spending more time on feature engineering on the pictures would undoubtedly lead to better results. However, it was not the scope of the present work.}. The final purpose was to show how the methods compare out of the box with little extra effort.\\
 
-\begin{figure}[!ht]
+We considered three types of features. First, we used a method known as Histogram of Oriented Gradients (HOG), introduced by William T. Freeman and Michal Roth \cite{MERL_TR94-03}. It consists of studying the slopes of the intensity of the pixels in a dense grid of the image. The feature space that this method output depends on the size of the lattice. Then, to test more straightforward features, we extracted the means and the standard deviations from each of the color channels in the same fashion that we did with t-SNE in the exploratory analysis. We additionally decided to consider the color channel means alone as a different feature set. Finally, we trained a random forest for each of these three sets of attributes.\\
+
+\begin{figure}[!h]
   \centering
     \begin{subfigure}{.24\textwidth}
         \includegraphics[width=\textwidth]{images/damaged1.jpg}
@@ -91,7 +98,9 @@ We used the application detailed in the previous chapter to crop and classify 10
 \end{figure}
 
 
-\begin{figure}[!ht]
+We reduced the problem to binary classification by selecting only two labels; a \textit{damage} tag when the samples showed clear infrastructure damage, and a \textit{no damage} tag when we saw no visible damage. We show some examples for both categories in Figures \ref{fig:damaged} and \ref{fig:nondamaged}. We used the application detailed in the previous chapter to crop and classify 200 square patches from the images in each of the towns. To keep the classes balanced, we chose 100 images for each class. Every sample was $327\times327$ pixels, and we assigned a tag manually for each of them. After the tagging process, we had 600 labeled images that we will refer to as \textit{our dataset} through the rest of this chapter. The information was stored in the relational database and reviewed for data consistency.\\
+
+\begin{figure}[!h]
   \centering
     \begin{subfigure}{.24\textwidth}
         \includegraphics[width=\textwidth]{images/nondamaged1.jpg}
@@ -122,19 +131,18 @@ We used the application detailed in the previous chapter to crop and classify 10
   \label{fig:nondamaged}
 \end{figure}
 
-To test the effectiveness of our method we need a benchmark for it. We decided to run an experiment with our data and classic computer vision methods. We extracted simple features from the images, and then we trained a classification model on the resulting data. By doing more complex feature engineering on the pictures, it would be likely to obtain better results. However, it was not the scope of the present work. We wanted to show how the methods compare out of the box with little extra effort.\\
+As mentioned earlier, we studied three different towns, so we assembled different datasets using a different permutation each time. In the case of the classic computer vision methods, we used two towns to train the model and the remaining one to test the trained model. In the case of the transfer learning model, we used the images of one town to retrain the model, the images of another town to validate the model during the training stage, and the remaining town to test the trained model. In all cases, we tested every single image in the testing town against the model.\\
 
-We used three types of features. First, we use a method known as histogram oriented gradients (hog), introduced by William T. Freeman and Michal Roth \cite{MERL_TR94-03}. It consists of studying the slopes of the intensity of the pixels in a dense grid of the image. The feature space that this method output depends on the size of the lattice. Then, to test more straightforward features, and we extract the means and the standard deviations from each of the color channels. The result was a six-dimensional vector for each picture. We also decided to consider the means alone as a different training set. Finally, we trained a random forest for each of the resulting sets.\\
+One of the difficulties that we found during our research process was that several images might depict the same collapsed building. 
+This event could happen when the drone flew over the same territory in different routes. During the tagging stage, we inspected the images for damaged areas, however, despite our efforts, it was impossible to obtain a set of pictures in which every single one was completely independent of the rest. This fact shaped our validation process.\\
 
-Our research targets a real environment in which data is scarcer. We are interested in the number of images needed to obtain good results. To research on that topic, we trained models feeding them with different training set sizes and testing them against a set of a fixed size. In summary, we trained a model for each combination of a method, a training set size, and a town permutation.\\
+A classical approach would be to divide the dataset into two parts; training and testing sets, the model is trained with the former, and then tested against the latter. This method is not used in practice because data is usually scarce and we would like to take the most of it. A better option is n-fold crossed-validation in which we repeat a similar approach n times and average the outcomes. This process makes more likely to train the model with every data point and average out errors that may appear by chance. However, n-fold crossed-validation does not suit our case because of the nature of our dataset. As a consequence of the patterns in which the drones overfly the area, some buildings appear several times in the dataset even though the original pictures were not the same. If we apply a technique such as cross-validation, it would be very likely to have the same building both in training and in the testing sets. This situation would lead to having very high accuracies for our model but not such good performance in a real setting.\\
 
-\section{Experiment}
-
-In this secction we will explain the details about our results. As we mentioned before we study three different towns, we assembled different train, validate and test sets using different permutations each time. In the case of the classic computer vision methods, two towns were used to train and the remaining one was used to test the trained model. In the case of the transfer learning model, we use the images of one town to retrain the model, the images of another town to validate the model during the training stage, and the remaining town to test the trained model. In all cases every single image in the testing town was tested against the model.
+Another thing to be considered is that while traditional supervised classification methods need to divide the dataset into two parts to perform the validation, machine learning methods often require three sets instead, namely train, validation, and test. The validation set is used during the training stage to fine tune the hyperparameters of the model, and then the testing set is used to see how our model deals with previously unseen data. We manage to elegantly avoid the problem of having repeated data on each of the datasets by using the fact of having information from three completely independent settings. We trained models feeding them with different training set sizes and testing them against a set of a fixed size. In summary, we trained a model for each combination of a method, a training set size, and town permutation.\\
 
 \subsection{Classic Computer Vision}
 
-We extracted the hog features using an implementation from the Python package scikit-image \cite{scikit-learn}. We used 8 orientations, and a $16\times16$ pixel window. Each town was selected once for testing, in table \ref{table:classic}, we assing labels that are later used in Figure \ref{fig:classic} to show the results that we obtained.
+We extracted the HOG features using an implementation from the Python package scikit-image \cite{scikit-learn}. We used eight orientations, and a $16\times16$ pixel window. Each town was selected once for testing, in table \ref{table:classic}, we show the codes that we use in Figure \ref{fig:classic} to show the results that we obtained.\\
 
 
 \begin{center}
@@ -153,7 +161,7 @@ We extracted the hog features using an implementation from the Python package sc
   \centering
     \begin{subfigure}{.49\textwidth}
         \includegraphics[width=\textwidth]{images/classic-hog.png}
-        \caption{Histogram Oriented Gradients}
+        \caption{Histogram of Oriented Gradients}
     \end{subfigure}
     \begin{subfigure}{.49\textwidth}
         \includegraphics[width=\textwidth]{images/classic-means.png}
@@ -169,11 +177,11 @@ We extracted the hog features using an implementation from the Python package sc
   \label{fig:classic}
 \end{figure}
 
-It was surprising that the model that showed the best performance was the one in which we considered means and standard deviations. We expected that the specialized features from the HOG model performed better that a simple mean and standard deviation extraction. We think that this was because the HOG features were designed to find objects in images, but they are not well suited for aerial images and the textures that characterizes the ribble. As we expected increasing the size of the training set results in improving the performance of the trained model. In particular we noticed that the worse performing models were the ones in which Juchit\'an de Zaragoza was used as training set, an hipothesis it that the pictures from Santa Mar\'ia Xadani and Unión Hidalgo do not generalize so well. The best performing model achieved 78\% accuracy and used Santa María Xadani as testing set. The worse performing model achieved 43.5\% which is particularly bad considering we are dealing with binary classifiers \footnote{A binary classifier which scores less than 50\% accuracy is worse than flipping a coin and using that experiment to decide.}.
+It was surprising that the model that showed the best performance was the one in which we considered means and standard deviations. We expected that the specialized features of the HOG model to perform better than a simple mean and standard deviation extraction. We think that the reason behind this was that the HOG features were designed to find objects in images, but they are not well suited for aerial images and the textures that characterize debris. As we expected, increasing the size of the training set results in improving the performance of the trained model. In particular, we noticed that the worse performing models were the ones using Juchit\'an de Zaragoza as the training set, a hypothesis is that the pictures from Santa Mar\'ia Xadani and Uni\'on Hidalgo do not generalize so well. The best performing model achieved 78\% accuracy and used Santa Mar\'ia Xadani as the testing set and all of the remaining 400 images to train. The worse performing model achieved 43.5\% and used Uni\'on Hidalgo to test with only 40 images in the training set which is particularly unfortunate considering we are dealing with binary classifiers \footnote{A binary classifier which scores less than 50\% accuracy is worse than flipping a coin and using that flip to decide the class.}.\\
 
 \subsection{Transfer Learning}
 
-In the case of transfer learning, we have three types of sets and three towns. This makes six different possible configurations, thus six different models for each training set size. We retrained the Inception model using our training data and 1000 training steps. We empirically noticed that further increase in the number of training steps didn't improve the final accuracy of the model.
+In the case of transfer learning, we have three types of sets and three towns. This fact makes six different possible configurations. Thus six different models for each training set size. We retrained the Inception model using our dataset and 1000 training steps\footnote{We empirically noticed that further increase in the number of training steps did not improve the final accuracy of the model.}.\\
 
 \begin{center}
   \begin{tabular}{|c|c|c|c|}
@@ -198,127 +206,47 @@ In the case of transfer learning, we have three types of sets and three towns. T
 \end{figure}
 
 
-\begin{figure}[ht]
+\subsection{Threshold Selection}
+
+A binary classifier assigns a real number in the interval $[0,1]$. To decide which tag to assign to each prediction we must choose a decision threshold. A tool that is often used to select such threshold is a Receiver Operating Characteristic curve (ROC curve). It was first proposed during World War II to measure the ability of a receiver operator to detect an enemy ship, where it took its name \cite{GreenSwets66}.
+
+When dealing with a binary classifier, we want to predict a condition $p$. If the outcome of our classification is $p$ and the real value is also $p$ we call that a true positive (TP), if the actual value is instead $n$, we call that a false positive. Conversely, we assign names for a true negative (TN) and a false negative when we predict $n$ as the outcome for our classifier. We call true positive rate (TPR) or \textit{sensitivity} to the ratio between the outcomes correctly predicted as $p$ and the number of elements that are indeed $p$. We are also interested in the false positive rate (FPR) or \textit{specificity}, which is the proportion of incorrectly assigning $p$ given that the condition is $n$. In a ROC curve, we plot the sensitivity as a function of the specificity; it is used to select a decision threshold and have a tradeoff between detecting as many positives and having as little false alarms as possible. There is an additional feature of interest, the area under the ROC curve (AUC) is often used for model comparison, the closer the value is to $1$ the better.\\
+
+There is no correct way to select a decision threshold. It depends on the application at hand. For instance, when we are dealing with disease diagnosis, a screening test should be very sensitive whereas a confirmatory test should be very specific. In our case we want our classifier to be very sensitive because there is not as much overhead to have false alarms. In Figure \ref{fig:roc} we show the ROC curves for each of the transfer learning models, to build them, the prediction the test images were recorded in each permutation among the different training set sizes. Therefore, we have a ROC curve for every training set size. As we can see, the area under the curve is very close to $1$ in every case, and it increases as the training set size increases.\\
+
+\begin{figure}[!h]
   \centering
-    \begin{subfigure}{.49\textwidth}
+    \begin{subfigure}{.48\textwidth}
         \includegraphics[width=\textwidth]{images/score-10-roc.png}
         \caption{Training Set Size: 20 Images}
     \end{subfigure}
     %
-    \begin{subfigure}{.49\textwidth}
+    \begin{subfigure}{.48\textwidth}
         \includegraphics[width=\textwidth]{images/score-25-roc.png}
         \caption{Training Set Size: 50 Images}
     \end{subfigure}
     %
-    \begin{subfigure}{.49\textwidth}
+    \begin{subfigure}{.48\textwidth}
         \includegraphics[width=\textwidth]{images/score-50-roc.png}
         \caption{Training Set Size: 100 Images}
     \end{subfigure}
     %
-    \begin{subfigure}{.49\textwidth}
+    \begin{subfigure}{.48\textwidth}
         \includegraphics[width=\textwidth]{images/score-75-roc.png}
         \caption{Training Set Size: 150 Images}
     \end{subfigure}
     %
-    \begin{subfigure}{.49\textwidth}
+    \begin{subfigure}{.48\textwidth}
         \includegraphics[width=\textwidth]{images/score-100-roc.png}
         \caption{Training Set Size: 200 Images}
     \end{subfigure}
   
   \caption{Receiver operating characteristic curves for the different training sets.}
-  \label{fig:whatever}
+  \label{fig:roc}
 \end{figure}
 
 
-\section{Model Validation}
 
-When we train a model, we want it to be a faithful representation of the phenomena that we study, but ¿How do we know that this description is correct? We need to validate the relationship between the outcome of the model and the data that we have at hand. This process is complicated. Validation must be carefully crafted to obtain valid results.\\
-
-One of the difficulties that we found during our research process was that several images might depict the same collapsed building. 
-This event could happen when the drone flew over the same territory in different routes. During the tagging stage, we inspected the images for damaged areas, however, despite our efforts, it was impossible to obtain a set of pictures in which every single one was completely independent of the rest. This fact shaped the validation process that we will describe now.\\
-
-Even though deep learning has allowed us to do a giant leap forward on the performance of several tasks, and contrary to what some researchers claim \cite{DBLP:journals/corr/KaiserGSVPJU17}, there exists no universal model. A good model would be able to be performant in very different settings, but it won't be able to handle every situation. We need our model to be robust, but we can not expect it to be perfect. Being aware of the limitations intrinsic to the model is the best way to alleviate possible mistakes. Although it sometimes seems the case, deep learning is not a magic box, it learns from the data that we supply. If the model is biased, in all likelihood, it means that our training set is biased.\\
-
-To have an efficient algorithm, we need it to be performant with places and images it has never seen before. A classic approach would be to divide the dataset into two parts; training and testing sets, the model is trained with the former, and then tested against the latter. This method is not used in practice because data is usually scarce and we would like to take the most of it. A better option is $n-fold$ crossed-validation in which we repeat a similar $n$ times and average the outcomes. This process makes more likely to train the model with every data point and average errors that may appear by chance. However, $n-fold$ crossed-validation does not suit our case because of the nature of the data. Our images were tagged manually; it was the case for some buildings to appear several times in the dataset even though the cropped pictures were not the same. If we apply a technique such as cross-validation, it would be very likely to have the same building both in training and in the testing sets. This situation would lead to having very high accuracies for our model but not such good performance in a real setting. Another thing to be considered is that while traditional supervised classification methods need to divide the dataset into two parts to perform the validation, machine learning methods often require three sets instead, namely train, validation,  and test. The validation test is used during the training stage to select the best performing algorithm, and the testing set is used to see how our model deals with previously unseen data. We manage to elegantly avoid the problem of having repeated data on each of the datasets by using the fact of having information from three completely different settings.\\
-
-To test our model we proposed two different approaches depending on the type of classification involved. With the supervised approaches, images from two towns were used to train the models, and then the remaining one served as test data. In the case of the transfer learning technique, we used one for training, another for validation, and the last one to test the model. We repeated this process in all possible combinations and the accuracies where averaged at the end.\\
-
-
-\section{How much is enough}
-
-
-In this section we want to create a benchmark on how much images are needed to perform a retraining of the Inception network. What we wanted to achieve was to demonstrate that it is possible to obtain high accuracys using only a handful of images. We where able to test this by designing an experiment that measures the acurracy of models trained with different sizes of training sets and testing them in a common test set.\\
-
-
-\section{Threshold selection}
-
-The binary classifier assigns a real number in the interval $[0,1]$. To decide which values will be assigined with either level a threshold must be chosen. This was picked using a ROC curve. The ROC curve helps us chosing the performance that fits our needs in the ver possible way. In order to do this we use a receiver operating characteristic curve. This tool is often used with binary classifiers to analyse the tradeoff between the true possitive rate and the false possitive rate by selecting different desicion thresholds.\\
-
-The threshold was chosen to keep the false positive rate to 0 percent on the training set while having the highest level of true positive rate. This was atained at the following level.\\
-
-The reason behind this decision was the high number of false positives shown in preliminary experiments. We want only to look at places in which the model is very confident of finding a damaged building. This theshold can be tunned to match the desired behavior in the requiered application.\\
-
-\section{Results}
-
-Ortorectified mosaics where built by CENAPRED using the very same images taht we used to train our models. This images come in a different format than the images taken by the drones. Additional to the optical information these tif files contain geographical location and can be used to assing a point in space to each pixel in the image. This means that we can not only locate a damaged building in an image, but to link this information with a geographical location in a given projection.\\
-
-The images where divided in a regular grid of 299 pixel tiles with 90 pixel ovelaps. These overlaps are later postprocessed to eliminate the posibility of counting the same building twice. Each tile is exposed to the model which predicts a class on it using the previously selected threshold. When the model test a tile positive, the box is saved for postprocesing in which a technique known as non max suppression is used to eliminate boxes that represent the same object. This technique is borrowed from facial recognition algorithms. Once we have the final boxes, the center pixel of each box is transformed to world coordinates. Additionaly, this coordinates are used to query Google Maps API to obtain a human readable address for each point.\\
-
-A shape file is produced which contains the results for each town given the output of the algorithm. This shape can be overlayed on top of the raster file using a Geographic Information System software such as QGIS. Additionaly the results are also exposed via the REST interface so they can be visualised in the web application.\\
-
-
-
-
-
-
-
-
-
-
-
-
-
-\begin{center}
-  \begin{tabular}{|c|c|c|c|c|c|}
-    \hline
-         &20 Images &50 Images &100 Images&150 Images&200 Images\\ \hline
-    U-S-J&0.55      &0.66      &0.77      &0.84      &0.81      \\ \hline
-    U-J-S&0.9       &0.94      &0.93      &0.92      &0.94      \\ \hline
-    J-S-U&0.65      &0.78      &0.77      &0.82      &0.78      \\ \hline
-    J-U-S&0.8       &0.82      &0.85      &0.847     &0.895     \\ \hline
-    S-J-U&0.7       &0.78      &0.86      &0.9       &0.895     \\ \hline
-    S-U-J&0.75      &0.72      &0.83      &0.833     &0.86      \\
-     
-    \hline
-  \end{tabular}
-\end{center}
-
-
-
-
-
-\begin{center}
-  \begin{tabular}{|c|c|c|}
-    \hline
-    threshold & true positive rate & false positive rate \\ \hline
-    0.983629 & 0.529412 & 0.0 \\
-    \hline
-  \end{tabular}
-\end{center}
-
-
-
-
-\begin{center}
-  \begin{tabular}{|c|c|c|c|c|c|}
-    \hline
-    town                 & positives & width & height & time (seconds) & overlap\\ \hline
-    Santa Maria Xadani   &51         & 25598 & 30144  & 4420           & 0.1 \\ \hline
-    Juchitan de Zaragoza &302        & 42375 & 28831  & 6375           & 0.1 \\ \hline
-    Union Hidalgo        &25         & 19945 & 28795  & 3938           & 0.1\\
-    \hline
-  \end{tabular}
-\end{center}
 
 
 
