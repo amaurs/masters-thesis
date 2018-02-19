@@ -11,7 +11,14 @@ We used $0.95$ as our decision threshold. According to the best of our models, t
 
 So far we have centered our discussion on training a model that is able to categorize images of a particular size. Using such a model to detect collapsed buildings from the drone imagery and geolocating our findings is a completely different story. We must prost-process the information given by the model in order to tranform it into insights.
 
-The usual methos is to use an slideing window. In this method we take a fixed window of the size that the model accepts, and we croped parts of the raster. En each step we use the model to predict on the current sample. When a prediction is positive, we save the location of the window. After the algorithm went through the whole image, we used the found positives and drew boxes over the original image. We can look at the result of this process in Figure \ref{fig:overlap}. It is evident that this approch has inherent flaws, as damaged buildings can be counted several times by the algorithm. A method to aliviate overlapping bounding boxed is known as non-maximum suppression (NMS). It was first proposed by A. Rosenfeld and M. Thurston in the context of edge detection techniques \cite{1671883}. It consist of checking the percentage of overlap in the set of bounding boxes and discarding those that repeat. The final result after postprocessing looks like Figure \ref{fig:no-overlap}.
+\subsection{Overlapping}
+
+The usual methos is to use an slideing window. In this method we take a fixed window of the size that the model accepts, and we croped parts of the raster. En each step we use the model to predict on the current sample. When a prediction is positive, we save the location of the window. After the algorithm went through the whole image, we used the found positives and drew boxes over the original image. We can look at the result of this process in Figure \ref{fig:overlap}. It is evident that this approch has inherent flaws, as damaged buildings can be counted several times by the algorithm. A method to aliviate overlapping bounding boxed is known as non-maximum suppression (NMS). It was first proposed by A. Rosenfeld and M. Thurston in the context of edge detection techniques \cite{1671883}. It consist of checking the percentage of overlap in the set of bounding boxes and discarding those that are repeated. The final result after postprocessing looks like Figure \ref{fig:no-overlap}.
+
+\subsection{Orthorectification}
+
+
+Ortorectified mosaics where built by CENAPRED using the very same images taht we used to train our models. This images come in a different format than the images taken by the drones. Additional to the optical information these tif files contain geographical location and can be used to assing a point in space to each pixel in the image. This means that we can not only locate a damaged building in an image, but to link this information with a geographical location in a given projection.\\
 
 \begin{figure}[h]
   \centering
@@ -28,34 +35,64 @@ The usual methos is to use an slideing window. In this method we take a fixed wi
 \end{figure}
 
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=1\textwidth]{images/validation-plot.png}
-  \label{fig:validaton-plot}
-  \caption{Results of our experiment. As we expected, the graph shows a positive correlation between the accuracy and the number of training samples.}
-\end{figure}
 
+\section{Final Results}
 
-
-\section{Deployment}
-
-Ortorectified mosaics where built by CENAPRED using the very same images taht we used to train our models. This images come in a different format than the images taken by the drones. Additional to the optical information these tif files contain geographical location and can be used to assing a point in space to each pixel in the image. This means that we can not only locate a damaged building in an image, but to link this information with a geographical location in a given projection.\\
-
-The images where divided in a regular grid of 299 pixel tiles with 90 pixel ovelaps. These overlaps are later postprocessed to eliminate the posibility of counting the same building twice. Each tile is exposed to the model which predicts a class on it using the previously selected threshold. When the model test a tile positive, the box is saved for postprocesing in which a technique known as non max suppression is used to eliminate boxes that represent the same object. This technique is borrowed from facial recognition algorithms. Once we have the final boxes, the center pixel of each box is transformed to world coordinates. Additionaly, this coordinates are used to query Google Maps API to obtain a human readable address for each point.\\
+The images where divided in a regular grid of $322\times322$ pixels tiles with 90 pixel ovelaps. These overlaps are later postprocessed to eliminate the posibility of counting the same building twice. Each tile is exposed to the model which predicts a class on it using the previously selected threshold. When the model test a tile positive, the box is saved for postprocesing in which a technique known as non max suppression is used to eliminate boxes that represent the same object. This technique is borrowed from facial recognition algorithms. Once we have the final boxes, the center pixel of each box is transformed to world coordinates. Additionaly, this coordinates are used to query Google Maps API to obtain a human readable address for each point.\\
 
 A shape file is produced which contains the results for each town given the output of the algorithm. This shape can be overlayed on top of the raster file using a Geographic Information System software such as QGIS. Additionaly the results are also exposed via the REST interface so they can be visualised in the web application.\\
 
 
 
-\begin{center}
-  \begin{tabular}{|c|c|c|c|c|c|}
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|c|c|}
     \hline
-    town                 & positives & width & height & time (seconds) & overlap\\ \hline
-    Santa Maria Xadani   &51         & 25598 & 30144  & 4420           & 0.1 \\ \hline
-    Juchitan de Zaragoza &302        & 42375 & 28831  & 6375           & 0.1 \\ \hline
-    Union Hidalgo        &25         & 19945 & 28795  & 3938           & 0.1\\
+    Town                 &Threshold&Positives  & Width & Height & Seconds & Overlap &Windows \\ \hline
+    Santa Mar\'ia Xadani   &0.96      &11         & 25598 & 30144  & 16403   & 0.0005  &45704 \\ \hline
+    Juchit\'an de Zaragoza &0.96      &562        & 42375 & 28831  & 21216   & 0.0005  &72372 \\ \hline
+    Uni\'on Hidalgo        &0.96      &73         & 19945 & 28795  & 11363   & 0.0005  &34188 \\
     \hline
   \end{tabular}
-\end{center}
+  \caption{We report details on running the algorithm on the orthorectified rasters. Width and height are in pixels. Threshold is our decision boundry to decide wether or not a window is considered to have damage. Windows are the number of predictions that the model gave us. We also report the time in seconds that each process took.}
+  \label{table:results}
+\end{table}
+
+
+\begin{figure}[!h]
+  \centering
+    \begin{subfigure}{.9\textwidth}
+        \includegraphics[width=\textwidth]{images/juchitan-ortho.jpg}
+    \end{subfigure}
+    \begin{subfigure}{.9\textwidth}
+        \includegraphics[width=\textwidth]{images/juchitan-example.jpg}
+    \end{subfigure}
+  \caption{Juchit\'an de Zaragoza.}
+  \label{fig:juchitan}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering
+    \begin{subfigure}{.9\textwidth}
+        \includegraphics[width=\textwidth]{images/santamaria-ortho.jpg}
+    \end{subfigure}
+    \begin{subfigure}{.9\textwidth}
+        \includegraphics[width=\textwidth]{images/santamaria-example.jpg}
+    \end{subfigure}
+  \caption{Santa Mar\'ia Xadani.}
+  \label{fig:santamaria}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering
+    \begin{subfigure}{.9\textwidth}
+        \includegraphics[width=\textwidth]{images/union-ortho.jpg}
+    \end{subfigure}
+    \begin{subfigure}{.9\textwidth}
+        \includegraphics[width=\textwidth]{images/union-example.jpg}
+    \end{subfigure}
+  \caption{Uni\'on Hidalgo.}
+  \label{fig:union}
+\end{figure}
 
 
