@@ -88,48 +88,54 @@ By consuming the REST api described in the previous section, a simple web client
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=1\textwidth]{images/visualise.png}
+  \includegraphics[width=1\textwidth]{images/small-app-juchitan.png}
   \caption{Visualisation process.}
   \label{fig:visualise}
 \end{figure}
+
+\begin{figure}[ht]
+  \centering
+    \begin{subfigure}{.49\textwidth}
+        \includegraphics[width=\textwidth]{images/small-app-juchitan.png}
+        \caption{Juchit\'an de Zaragoza'}
+    \end{subfigure}
+    \begin{subfigure}{.49\textwidth}
+        \includegraphics[width=\textwidth]{images/small-app-santamaria.png}
+        \caption{Santa Mar\'ia Xadani}
+    \end{subfigure}
+    %
+    \begin{subfigure}{.49\textwidth}
+        \includegraphics[width=\textwidth]{images/small-app-union.png}
+        \caption{Uni\'on Hidalgo}
+    \end{subfigure}
+  
+  \caption{Information interface. We give a summary of the information ingested in the system.}
+  \label{fig:visualize}
+\end{figure}
+
 
 
 An additional button is given that lets the user see how well is the current best model performing. The process is quite similar to the previous one. In the server, the image is cropped and then the thumbnail is exposed to the model and the result is written back to the client through the REST api.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=1\textwidth]{images/predict.png}
-  \caption{Predict interface.}
-  \label{fig:predict}
-\end{figure}
-
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=1\textwidth]{images/submit.png}
+  \includegraphics[width=1\textwidth]{images/small-app-tag.png}
   \caption{Submit interface.}
   \label{fig:submit}
 \end{figure}
-
 
 During the process, we noticed that the tagging process can lead to errors. In order to deal with those mistaken tagged images, a visualiser for the tagged images was developed. It consist in a simple interface where the last tagged images are shown with their respective tag. The interface offers a way to delete a given image or just edit the previously assigned tag.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=1\textwidth]{images/thumbnails.png}
+  \includegraphics[width=1\textwidth]{images/small-app-edit.png}
   \caption{Edit interface.}
-  \label{fig:thumbnails}
+  \label{fig:app-edit}
 \end{figure}
 
 
 Finally, we developed a view for the points that the algorithm finds in the ortorectified image. This view was implemented with open layers and shows information about the location of the potential damaged building in a human readable form. This is done by querying the google api with the latitude and longitude points extracted from the map.
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=1\textwidth]{images/debris.png}
-  \caption{Predict interface.}
-  \label{fig:debris}
-\end{figure}
 
 \section{Predict}
 

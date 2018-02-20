@@ -48,7 +48,14 @@ In order to transform our images into useful information from the spatial point 
 
 Using the methods described in the previous section, we applied our process to the three orthorectified rasters provided by CENAPRED. We randomly placed $322\times322$ pixels boxes along the raster, randomly sampling the location of each of them. The boxes with a positive outcome were saved and post-processed to find overlaps. Once we have the non-overlapping boxes, we transform the center pixel of each box to world coordinates. Finally, these coordinates are used to query Google Maps API obtaining a human-readable address for each point. In table \ref{table:results} we show details of this exercise.\\
 
-We produced a shape-file containing the results for each town given the output of the algorithm. This shape can be overlayed on top of the raster file using a Geographic Information System software such as QGIS. Figures \ref{fig:juchitan-gis},\ref{fig:santamaria-gis}, and \ref{fig:union-gis} show our results. Additionally, the results are also exposed via the REST interface so we can visualize them in the web application.\\
+We produced a shape-file containing the results for each town given the output of the algorithm. This shape can be overlayed on top of the raster file using a Geographic Information System software such as QGIS. Figures \ref{fig:juchitan-gis},\ref{fig:santamaria-gis}, and \ref{fig:union-gis} show our results. Additionally, the results are also exposed via the REST interface so we can visualize them in the web application as we see in Figure \ref{fig:predict}.\\
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=1\textwidth]{images/small-app-predict.png}
+  \caption{Predict interface.}
+  \label{fig:predict}
+\end{figure}
 
 
 \begin{table}[h!]
