@@ -2,32 +2,34 @@ Even though deep learning has allowed us to do a giant leap forward on the perfo
 
 \section{Final Model}
 
-In the previous chapter we trained and validated several models. We found that our methodology is quite effective in the task of locating damaged buildins. We now centered our efforts in creating a final model taking into account the entire dataset of 600 tagged samples. This model was not validated as there was no images left to use as testing set. This would closely resemble a real pipeline.
+In the previous chapter, we trained and validated several models. We found that our methodology is quite useful in the task of locating damaged buildings. We now centered our efforts in creating a final model taking into account the entire dataset of 600 tagged samples. This model was not validated as there were no images left to use as a testing set. This process would closely resemble a real pipeline.\\
 
-We used $0.95$ as our decision threshold. According to the best of our models, this threshold guaratees us that we would have around a $0.47$ probability assigning a damaged label when the building is damaged while only having a $0.01$ probability of misslabeling a non damaged building. While this decision threshold was not necessarily valid for our final model, it gave us a hint on what decisión to make. We are sacrificing sensibility for specificity, when we predict a damage building we are confident that it will be a true positive. We could argue about the low probability of assigning a damage label but it all makes sense if we thing that we test a lot of samples for each zone.
+
+We used $0.95$ as our decision threshold. According to the best of our models, this threshold guarantees us that we would have around a $0.47$ probability assigning a damaged label when the condition is present while only having a $0.01$ likelihood of mislabeling a no damaged building. While this decision threshold was not necessarily valid for our final model, it gave us a hint on what decisión to make. We are sacrificing sensibility for specificity when we predict a damaged building we are confident that it will be a true positive. We could argue about the low probability of assigning a damaged label, but it all makes sense if we think that we test many samples for each zone.\\
 
 
 \section{Post-processing}
 
-So far we have centered our discussion on training a model that is able to categorize images of a particular size. Using such a model to detect collapsed buildings from the drone imagery and geolocating our findings is a completely different story. We must prost-process the information given by the model in order to tranform it into insights.
+So far we have centered our discussion on training a model that can categorize images of a particular size. Using such a model to detect collapsed buildings from the drone imagery and geolocating our findings is an entirely different story. We must post-process the information given by the model to transform it into insights.\\
 
 \subsection{Overlapping}
 
-The usual methos is to use an slideing window. In this method we take a fixed window of the size that the model accepts, and we croped parts of the raster. En each step we use the model to predict on the current sample. When a prediction is positive, we save the location of the window. After the algorithm went through the whole image, we used the found positives and drew boxes over the original image. We can look at the result of this process in Figure \ref{fig:overlap}. It is evident that this approch has inherent flaws, as damaged buildings can be counted several times by the algorithm. A method to aliviate overlapping bounding boxed is known as non-maximum suppression (NMS). It was first proposed by A. Rosenfeld and M. Thurston in the context of edge detection techniques \cite{1671883}. It consist of checking the percentage of overlap in the set of bounding boxes and discarding those that are repeated. The final result after postprocessing looks like Figure \ref{fig:no-overlap}.
+We envisioned two methods to apply our predictive model to a full image. Sliding-window, in which we move a fixed squared along the x-axis and the y-axis, and for each $(x,y)$ value the model is used to predict the condition of the particular window. Another method is to use random sampling, in which we place the window randomly in the image, and then the model is used in the same fashion using a parameter to control the density of the windows. In both cases, we saved the locations of the windows with positive outcome and painted them over the original image. We show an example of our results using the random sampling method in Figure \ref{fig:overlap}.\\
 
-\subsection{Orthorectification}
-
-
-Ortorectified mosaics where built by CENAPRED using the very same images taht we used to train our models. This images come in a different format than the images taken by the drones. Additional to the optical information these tif files contain geographical location and can be used to assing a point in space to each pixel in the image. This means that we can not only locate a damaged building in an image, but to link this information with a geographical location in a given projection.\\
-
-\begin{figure}[h]
+\begin{figure}[!h]
   \centering
   \includegraphics[width=\textwidth]{images/overlap.jpg}
   \label{fig:overlap}
   \caption{Results of our experiment. As we expected, the graph shows a positive correlation between the accuracy and the number of training samples.}
 \end{figure}
 
-\begin{figure}[h]
+
+
+
+It is evident that this approach has inherent flaws, as damaged sites are counted several times by the algorithm. A method to alleviate overlapping bounding boxes is known as non-maximum suppression (NMS), a technique borrowed from facial recognition algorithms. First proposed by A. Rosenfeld and M. Thurston in the context of edge detection techniques \cite{1671883}, it consists of checking the percentage of overlap in the set of bounding boxes and discarding those that repeat. The final result after postprocessing looks like Figure \ref{fig:no-overlap}.\\
+
+
+\begin{figure}[!h]
   \centering
   \includegraphics[width=\textwidth]{images/no-overlap.jpg}
   \label{fig:no-overlap}
@@ -35,13 +37,18 @@ Ortorectified mosaics where built by CENAPRED using the very same images taht we
 \end{figure}
 
 
+\subsection{Orthorectification}
+
+In order to transform our images into useful information from the spatial point of view we need to put them through a process called orthorectification. It removes the effects that arise from the perspective in which the drone took the image. It also stiched and puts the images together to create a mosaic that covers the region of interest. This process needs specialised software, and CENAPRED built those mosaics for us. These rasters are the ones that we use to test our final model. The mosaics gave us the ability to assing coordinates to each of the sites in which the model gave us a positive output. 
+
+
+
 
 \section{Final Results}
 
-The images where divided in a regular grid of $322\times322$ pixels tiles with 90 pixel ovelaps. These overlaps are later postprocessed to eliminate the posibility of counting the same building twice. Each tile is exposed to the model which predicts a class on it using the previously selected threshold. When the model test a tile positive, the box is saved for postprocesing in which a technique known as non max suppression is used to eliminate boxes that represent the same object. This technique is borrowed from facial recognition algorithms. Once we have the final boxes, the center pixel of each box is transformed to world coordinates. Additionaly, this coordinates are used to query Google Maps API to obtain a human readable address for each point.\\
+Using the methods described in the previous section, we applied our process to the three orthorectified rasters provided by CENAPRED. We randomly placed $322\times322$ pixels boxes along the raster, randomly sampling the location of each of them. The boxes with a positive outcome were saved and post-processed to find overlaps. Once we have the non-overlapping boxes, we transform the center pixel of each box to world coordinates. Finally, these coordinates are used to query Google Maps API obtaining a human-readable address for each point. In table \ref{table:results} we show details of this exercise.\\
 
-A shape file is produced which contains the results for each town given the output of the algorithm. This shape can be overlayed on top of the raster file using a Geographic Information System software such as QGIS. Additionaly the results are also exposed via the REST interface so they can be visualised in the web application.\\
-
+We produced a shape-file containing the results for each town given the output of the algorithm. This shape can be overlayed on top of the raster file using a Geographic Information System software such as QGIS. Figures \ref{fig:juchitan-gis},\ref{fig:santamaria-gis}, and \ref{fig:union-gis} show our results. Additionally, the results are also exposed via the REST interface so we can visualize them in the web application.\\
 
 
 \begin{table}[h!]
@@ -59,6 +66,8 @@ A shape file is produced which contains the results for each town given the outp
 \end{table}
 
 
+
+
 \begin{figure}[!h]
   \centering
     \begin{subfigure}{.9\textwidth}
@@ -68,7 +77,7 @@ A shape file is produced which contains the results for each town given the outp
         \includegraphics[width=\textwidth]{images/juchitan-example.jpg}
     \end{subfigure}
   \caption{Juchit\'an de Zaragoza.}
-  \label{fig:juchitan}
+  \label{fig:juchitan-gis}
 \end{figure}
 
 \begin{figure}[!h]
@@ -80,7 +89,7 @@ A shape file is produced which contains the results for each town given the outp
         \includegraphics[width=\textwidth]{images/santamaria-example.jpg}
     \end{subfigure}
   \caption{Santa Mar\'ia Xadani.}
-  \label{fig:santamaria}
+  \label{fig:santamaria-gis}
 \end{figure}
 
 \begin{figure}[!h]
@@ -92,7 +101,7 @@ A shape file is produced which contains the results for each town given the outp
         \includegraphics[width=\textwidth]{images/union-example.jpg}
     \end{subfigure}
   \caption{Uni\'on Hidalgo.}
-  \label{fig:union}
+  \label{fig:union-gis}
 \end{figure}
 
 
