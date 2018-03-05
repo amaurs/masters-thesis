@@ -1,18 +1,18 @@
 It is an inspiring moment for the field of computer vision; machines are now capable of performing tasks that we thought were impossible, reaching new milestones each year. It has been a long time since computers were just large furniture in cold university rooms. Computer power has grown exponentially since those days. In recent years, techniques initially discarded because they were computation intense are now being unburied and have been showing incredible results in today machines.\\
 
-The objective of this work was to explore the possibilities that these techniques can offer in classic problems such as landcover classification. In particular, we wanted to teach a neural network how to recognize a specific element in aerial imagery and then use the tailored features as input to train classic classifiers such as random forest or support vector machines.\\
+The objective of this work was to explore the possibilities that these techniques can offer in problems such as damage assessment. In particular, we wanted to teach a neural network how to recognize damaged buildings in aerial imagery. We obtained imagery captured by drones after a massive earthquake stoke south of Mexico in September 2017.\\
 
 This preface serves as an introduction to this work. It gives a short review of the contents of each chapter, and shows how is this dissertation structured.\\
 
 We explore our motivations in Chapter 1. We expose why our work is essential, and we give a clear explanation about the objective of the experiment. We offer a historical review on the grounds of several natural disasters that have occurred in Mexico, focusing mainly on earthquakes. Additionally, we explore the scope of the project by mentioning limitations and objectives.\\
 
-We show an extensive literature review in Chapter 2. All the way back to the well-known technique to analyze handwritten digits with the convolutional architecture that started the revolution. A review of modern applications in more complex situations such as object recognition in images. We explore methods to perform damage assessment in the aftermath of natural disasters as it was the primary motivation for this study. We unveil the mathematical details that make this technique to work, diving into the process of backpropagation. We talk about last layer activation functions such as the Sigmoid and the Softmax.\\
+We show an extensive literature review in Chapter 2. All the way back to the well-known technique to analyze handwritten digits with the convolutional architecture that started the revolution. A review of modern applications in more complex situations such as object recognition in images. We explore methods to perform damage assessment in the aftermath of natural disasters as it was the primary motivation for this study. We unveil the mathematical details that make this technique to work, diving into the process of backpropagation.\\
 
 We elaborate on the architecture of our pipeline in Chapter 3. This process includes data gathering, data curation, the training of the network and the prediction. We divide the details of the implementation into two parts, client and server side. We delve into the reasoning behind some decisions as the flux of the project suggested new ideas and custom tools emerged. We show our resulting map, and how did we obtain it.\\
 
-The development and outcome of our experiment is discussed in Chapter 4. We evaluate our model against classical computer vision techniques, and we propose a validation scheme for the model using the data at our hands.
+The development and outcome of our experiment is discussed in Chapter 4. We evaluate our model against classical computer vision techniques, and we propose a validation scheme for the model using the data at our hands.\\
 
-Chapter 5 dives into the implementation in real-world setting. We use the trained model to predict on orthorectified areas. In the end, the predictions are geolocalised and transformed into human readable adresses, and persisted in a database.
+Chapter 5 dives into the implementation in real-world setting. We use the trained model to predict on orthorectified areas. In the end, the predictions are geolocalised and transformed into human readable adresses, and persisted in a database.\\
 
 Finally, in chapter 6, we talk about future work, and what are the main conclusions to which this practice led us. We include several improvements that we can address to obtain better results.\\
 

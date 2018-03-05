@@ -2,7 +2,15 @@ Even though deep learning has allowed us to do a giant leap forward on the perfo
 
 \section{Final Model}
 
-In the previous chapter, we trained and validated several models. We found that our methodology is quite useful in the task of locating damaged buildings. We now centered our efforts in creating a final model taking into account the entire dataset of 600 tagged samples. This model was not validated as there were no images left to use as a testing set. This process would closely resemble a real pipeline.\\
+In the previous chapter, we trained and validated several models. We found that our methodology is quite useful in the task of locating damaged buildings. We now centered our efforts in creating a final model taking into account the entire dataset of 600 tagged samples. This model was not validated as there were no images left to use as a testing set. This process would closely resemble a real pipeline (Figure \ref{fig:process}).\\
+
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=1\textwidth]{images/process-diagram.png}
+  \caption{The complete cycle of the process. Drones gather data, gets preprocessed, we train the model, and the final user verifies the information extracted by the model on site.}
+  \label{fig:process}
+\end{figure}
 
 
 We used $0.95$ as our decision threshold. According to the best of our models, this threshold guarantees us that we would have around a $0.47$ probability assigning a damaged label when the condition is present while only having a $0.01$ likelihood of mislabeling a no damaged building. While this decision threshold was not necessarily valid for our final model, it gave us a hint on what decisión to make. We are sacrificing sensibility for specificity when we predict a damaged building we are confident that it will be a true positive. We could argue about the low probability of assigning a damaged label, but it all makes sense if we think that we test many samples for each zone.\\
@@ -19,21 +27,21 @@ We envisioned two methods to apply our predictive model to a full image. Sliding
 \begin{figure}[!h]
   \centering
   \includegraphics[width=\textwidth]{images/overlap.jpg}
-  \label{fig:overlap}
   \caption{Results of our experiment. As we expected, the graph shows a positive correlation between the accuracy and the number of training samples.}
+  \label{fig:overlap}
 \end{figure}
 
 
 
 
-It is evident that this approach has inherent flaws, as damaged sites are counted several times by the algorithm. A method to alleviate overlapping bounding boxes is known as non-maximum suppression (NMS), a technique borrowed from facial recognition algorithms. First proposed by A. Rosenfeld and M. Thurston in the context of edge detection techniques \cite{1671883}, it consists of checking the percentage of overlap in the set of bounding boxes and discarding those that repeat. The final result after postprocessing looks like Figure \ref{fig:no-overlap}.\\
+It is evident that this approach has inherent flaws, as damaged sites are counted several times by the algorithm. A method to alleviate overlapping bounding boxes is known as non-maximum suppression (NMS), a technique borrowed from facial recognition algorithms. First proposed by A. Rosenfeld and M. Thurston in the context of edge detection techniques \cite{1671883}, it consists of checking the percentage of overlap in the set of bounding boxes and discarding those that repeat. The final result after postprocessing looks like Figure \ref{fig:nooverlap}.\\
 
 
 \begin{figure}[!h]
   \centering
   \includegraphics[width=\textwidth]{images/no-overlap.jpg}
-  \label{fig:no-overlap}
   \caption{Results of our experiment. As we expected, the graph shows a positive correlation between the accuracy and the number of training samples.}
+  \label{fig:nooverlap}
 \end{figure}
 
 
