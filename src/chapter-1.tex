@@ -2,15 +2,15 @@ Earthquakes are unpredictable phenomena, which damaging capabilities can be cata
 
 \section{Motivation}
 
-Massive collaboration proved to be a fundamental resource to face the aftermath caused by the earthquake of September 19, 2017, in Mexico City. The use of social networks allowed communication between rescue, logistics, and civil society. We learned lessons about the scope and limitations of this association.\\
+Massive collaboration proved to be a fundamental resource to face the aftermath caused by the earthquake of September 19, 2017, in Mexico City. The use of social networks allowed communication between rescue, logistics, and civil society. This tragic event made us learn lessons about the scope and limitations of the association bewteen technology and people.\\
 
-However, what happens when the conditions and technological infrastructure of large cities do not exist? This work explores other possibilities in which current technologies can help us when the situation in which the natural disaster occurs is different. Focusing on the study of images captured by drones during the days after the earthquake of September 7, 2017, in towns of the state of Oaxaca, we propose an analytical framework that allows detecting damaged areas in an automated way.\\
+Mexico City is a large city, with good communications, and technological infrastructure. What happens when conditions and technological infrastructure of large cities do not exist? This work explores other possibilities in which current technologies can help us when the situation in which the natural disaster occurs is different. Focusing on the study of images captured by drones during the days after the earthquake of September 7, 2017, in three towns in the state of Oaxaca, we propose an analytical framework that allows detecting damaged areas in an automated way.\\
 
 To do this, we applied techniques that allow the use of models that have been previously trained in massive supercomputers, adjusting them to our particular problem. This process reduces the number of resources needed, in both time and infrastructure, to obtain results with high accuracy. In the future, this will allow allocating efforts in a more agile and efficient manner.\\
 
-\section{History}
+\section{Context}
 
-Given to the particular geographical conditions, Mexico is very prone to seismic activity. The Cocos and the Rivera plates subduct below the North American plate, and the Pacific plate separates from the North American plate along the Baja California Gulf \cite{AG3315}.\\
+Due to its particular geographical conditions, Mexico is very prone to seismic activity \cite{AG3315}. The Cocos and the Rivera plates subduct below the North American plate, and the Pacific plate separates from the North American plate along the Baja California Gulf as can be seen in Figure \ref{fig:plates}. This characteristic has made the country suffer from many disasters along its history.\\
 
 \begin{figure}[h]
   \centering
@@ -20,18 +20,18 @@ Given to the particular geographical conditions, Mexico is very prone to seismic
 \end{figure}
 
 
-According to historical research, there has been a registry of these natural disasters since the Pre-Columbian age. The level of material damage and the death toll has been increasing ever since as the population and the cities grew. In Figure \ref{fig:pictogram} we can see a pictogram that according to \cite{sismosmexico} means "in the year 11 rabbit the earth trembled during the night".\\
+\subsection{History}
+
+There has been a registry of these natural disasters since the Pre-Columbian age. The level of material damage and the death toll have been increasing as the population and the cities grow. In Figure \ref{fig:pictogram} we can see a pictogram that according to \cite{sismosmexico} means "in the year 11 rabbit the earth trembled during the night".\\
 
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=1\textwidth]{images/codice.jpg}
-  \caption{Pictogram depicting an earthquake.}
+  \caption{An earthquake happened during the year 11 rabbit according to an aztec glyph.}
   \label{fig:pictogram}
 \end{figure}
 
-
-The use of cartography to place the damage information also is useful not only to allocate resources in the aftermath of the disaster but also serves as historical evidence. In figure \ref{fig:quake1800} taken from \cite{AG3316} we can see the buildings damaged by an earthquake known as the \textit{San Juan de Dios} earthquake \footnote{Back then the earthquakes where name accordingly to the day in which they happened.}. This event dates back to March 8, 1800, years before the Mexican Independence, during an age of economic and social prosperity.\\
 
 According to historical records, a critical earthquake occurred in the year 1787, causing a massive tsunami that affected the coasts of Oaxaca along 450 kilometers. Paradoxically, this catastrophic event didn't produce as much damage as recent ones due to the lack of established cities in the state back then.\\
 
@@ -45,26 +45,28 @@ Two earthquakes took place during September 2017. While the second one devastate
 \begin{figure}[h]
   \centering
   \includegraphics[width=1\textwidth]{images/quake1800.png}
-  \caption{A damaged building map for the *San Juan de Dios* earthquake in Mexico City.}
+  \caption{A damaged building map for the \textit{San Juan de Dios} earthquake in Mexico City.}
   \label{fig:quake1800}
 \end{figure}
 
+\subsection{Cartography}
 
+Maps are flat representations of reality, and cartography is the study and practice of making them. In our contex we will use them to place the points of interest in a visual tool that help us with the resource allocation.\\
+
+The use of cartography to map the damage information is useful to allocate resources in the aftermath of the disaster, and to serve as historical evidence. In figure \ref{fig:quake1800} taken from \cite{AG3316} we can see the buildings damaged by an earthquake known as the \textit{San Juan de Dios} earthquake \footnote{Back then the earthquakes where name accordingly to the day in which they happened.}. This event dates back to March 8, 1800, years before the Mexican Independence, during an age of economic and social prosperity.\\
 
 \section{Objective}
 
-It is not coincidental that our brief historical summary focused mainly in Mexico City. The lack of infrastructure and the distance from large cities make it harder to reach certain towns with resources and aid. We want to explore the use of new technologies to focus our efforts and use them better.\\
+It is not coincidental that our brief historical summary focused mainly in Mexico City. Centralization has always been an inherent characteristic of Mexico. The lack of infrastructure and the distance from large cities make it harder to reach certain towns with resources and aid. We want to explore the use of new technologies to focus our efforts and use resources better.\\
 
-The National Center for Prevention of Disasters (CENAPRED) provided us with imagery taken on the days after the Chiapas earthquake took place. They flew drones over the towns of Juchitan de Zaragoza, Santa Maria Xadani, and Union Hidalgo. We propose to use those images to train a model that lets us geolocate collapsed buildings and create a map with them. In the case of another catastrophic event of similar nature, drones can be sent to fly over the affected area, and our proposed tool can be used to narrow dramatically the places which assessment teams must visit. This would reduce the amount of resources and time needed to correctly asses the damage in the earthquake aftemath.\\
+Data science arises from the need to process and filter large amounts of information. Without this organization, all this flow of data becomes just noise, transforming it into useful information is the work of data scientists. Using powerful mathematical tools implemented in state of the art technology, we propose a pipeline that lets us transform raw data in the form of drone imagery into information useful to allocate the resources in a more efficient way during a crisis.\\
+
+The National Center for Prevention of Disasters (CENAPRED) provided us with imagery taken on the days after the Chiapas earthquake took place. They flew drones over the towns of Juchitan de Zaragoza, Santa Maria Xadani, and Union Hidalgo. We propose to use those images to train a model that lets us geolocate collapsed buildings and create a map with them. In the case of another catastrophic event of similar nature, drones can be sent to fly over the affected area, and our tool can be used to narrow dramatically the places which assessment teams must visit. This would reduce the amount of resources and time needed to correctly asses the damage in the earthquake aftemath.\\
+
+The main focus of this project is to create a data product we went through the different stages involved in this process. This process involves not only the use of statistical tools to extract insights, but also the process of making this extraction reproducible. It is not only doing the analysis but also creating the tools to make the analysis easier to repeat.\\
 
 We want to explore the use of Convolutional Neural Networks (CNNs) in this context. We believe that this field is useful for disaster assessment, and will bloom in the coming years.\\
 
-\section{Scope}
+The literature review in which we will dive more in-depth in the next chapter sets the foundation for our ideas. The techniques that we use were tested in other contexts before. This fact allowed us to focus on the implementation alone confident that the experiment would lead to good results. Nevertheless, it would be far too ambitious to cover every topic that is involved in the process of classification using CNNs. We want to explain how do the networks work to a certain extent, but it is not in the scope of this work to untangle every single detail.\\
 
-We don't pretend to provide a perfect mapping of every single collapsed building. We understand the inherent limitations of automatic methods, but we believe that we can achieve greater things working together with this new tools. Machine learning methods are not a panacea by no means, but a useful device that can help us reach places we could just imagine before.\\
-
-We have to keep in mind that this is only the beginning and that there is vast room for improvement. The literature review in which we will dive more in-depth in the next chapter suggests ways of improving the results that we got, but its implementation is out of the scope of this work.\\
-
-It would be far too ambitious to cover every topic that is involved in the process of the classification using CNNs. We want to explain how do the networks work to a certain extent, but it is not in the scope of this work to untangle every single detail.\\
-
-As we already mentioned, the field of Computer Vision is in its climax. Reviewing every single article written on the topic would be a daunting task. We offer a brief literature review that gives some context about the state-of-the-art, and we hope to build upon ideas and efforts done by a myriad of people. We aimed to create a system capable of processing imagery and that allows an institution such as CENAPRED to deploy it into a cluster for efficient computation.\\
+As we already mentioned, the field of Computer Vision is in its climax. We offer a brief literature review that gives some context about the state-of-the-art, and we hope to build upon ideas and efforts done by a myriad of people. We aimed to create a system capable of processing imagery and that allows an institution such as CENAPRED to deploy it into a cluster for efficient computation.\\
