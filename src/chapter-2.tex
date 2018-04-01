@@ -91,9 +91,7 @@ The reasoning behind this idea is that when we see a picture, our brain automati
 
 TensorFlow is a machine learning system developed by the Google Brain Team to supersede its first-generation system, DistBelief. Built on top of the lessons learned during DistBelief development. One of the fundamental concepts that lead the team to create a new system from scratch was the need for flexibility. TensorFlow lets us express machine learning algorithms using a standard interface with implementations targeting a wide range of devices. Complex models that first implemented in DistBelief such as Inception got a performance boost of a factor of x6 \cite{tensorflow2015-whitepaper} when they got moved to the new system. TensorFlow was opened sourced on November 9, 2015 under the Apache 2.0 license.\\ 
 
-In this section, we will untangle some of the details of how TensorFlow and its graph model work \cite{DBLP:journals/corr/AbadiBCCDDDGIIK16}.\\
-
-It uses an elegant data-flow system in which both the operations and the state of the algorithm gets represented as nodes and edges in a directed graph. This lets the system build an optimal sub-graph before starting the calculations.\\
+In this section, we will untangle some of the details of how TensorFlow and its graph model work \cite{DBLP:journals/corr/AbadiBCCDDDGIIK16}. It uses an elegant data-flow system in which both the operations and the state of the algorithm get represented as nodes and edges in a directed graph. This lets the system build an optimal sub-graph before starting the calculations.\\
 
 With flexibility in mind, this system lets the user define new operations and register them to use within the framework. Additionally, it was developed to target different platforms, from machine clusters to mobile devices, these implementations are known as \textit{kernels}. Using the same programming model, TensorFlow decides at runtime which pieces to use; this is useful when taking into account the whole development process of a data product and how it evolves. For example, when a developer experiments with data in a single computer before deploying the system to be trained with a more massive data set in a cluster of computers. Another example comes when the model training process, it can be deployed to an online service which will run on a single computer, but then it can be implemented in a mobile device for offline use. In each of these steps the underlying environment is entirely different. However, TensorFlow adapts automatically to each situation.\\
 
@@ -112,10 +110,9 @@ An interesting tool that comes with the framework is TensorBoard. With the immen
 
 There are several alternatives that offer similar features to TensorFlow. Theano, Torch, Caffe, Keras to name a few. The purpose of this work is by no means to study the advantages or disadvantages of these systems nor to create a benchmark for their performance. We choose TensorFlow because the pipeline was already in Python,  to minimize the gluing code. Among the examples that come with the system, there is an end to end example of how to transfer learning from one trained net to another task.\\
 
+\section{Summary}
 
-
-
-
+An extensive literature review gave us the tools to plan our methodology, based on the ideas that we thought were promising for our objective. Given the results reported in \cite{DBLP:journals/corr/YosinskiCBL14}, we decided to use transfer learning for our task. We decided not to explore the concept of data augmentation because we had the ability to control the size of the training set. We took the tool that TensorFlow provides to perform transfer learning, using Inception as the architecture to start with. Based on \cite{DBLP:journals/corr/RazavianASC14}, we choose to compare the method using transfer learning with a more classical approach, in our case we chose a random forest classifier. To keep the scope of our work not too ambitious we left out the possibility of collating our results with official data as suggested on \cite{Kryvasheyeue1500779}.
 
 
 

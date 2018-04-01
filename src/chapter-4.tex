@@ -1,6 +1,6 @@
 The process that our experiment undertook was iterative. Obstacles in the analysis showed the need to develop tools that helped us to make the process less cumbersome. In the same way that in the previous chapter we explored the flow of ideas that led to our pipeline design, here we will explain how data shaped our experimental process.\\
 
-The purpose of training a model, is to provide a faithful representation of the  studied phenomena, but how do we know that this description is correct? We need to validate the relationship between the outcome of the model and the data that we have at hand. Validation must be carefully crafted to obtain accurate results. In other words, we need to control the variables that might affect the outcome of the experiment so we can isolate the phenomena that we are studying.\\
+The purpose of training a model, is to provide a faithful representation of the  studied phenomena, but how do we know that this description is correct? We need to validate the relationship between the outcome of the model and the data that we have at hand. Validation must be carefully crafted to obtain accurate results. In other words we need to control the variables that might affect the outcome of the experiment so we can isolate the phenomena that we are studying.\\
 
 To have a complete picture of how our approach is compared with other classical techniques from  computer vision, we trained other models to test their performance against our novel approach. This exercise gave us some insight on the feasibility of a real world implementation.\\
 
@@ -45,13 +45,12 @@ During the week following the Chiapas earthquake of September 7, 2017, several d
   \label{fig:union}
 \end{figure}
 
-As we can see from Figures \ref{fig:juchitan}, \ref{fig:santamaria}, and \ref{fig:union}, drones fly in regular patterns forming a lattice of points, these clouds of information distribute spatially around the towns of interest. We wanted to show that this clustering translates to the space of information that the images contain. To do this, we used a technique known as t-Distributed Stochastic Neighbor Embedding (t-SNE), introduced by Laurens van der Maaten \cite{t-sne}, as an alternative to traditional methods that were difficult to optimize given the computational costs.\\
+As we can see from Figures \ref{fig:juchitan}, \ref{fig:santamaria}, and \ref{fig:union}, drones flew in regular patterns forming a lattice of points, these clouds of information distribute evenly around the towns of interest. Given this distribution, it was reasonable to hypothesize that there was an underlying similarity between images of the same town. This similarity might be caused by the light conditions during the exposure that tend to have less variance among similar times and places. A limitation found was that the size of the images\footnote{Raw images are $4000\times3000$ pixels, and three color channels each.} prevented us from computing regular metrics such as the Euclidian distance between a pair of images. To overcome this problem, the information from the pixels of each image was flattened into a vector comprising the means and standard deviations for each color channel. In summary, for each image, we obtained a vector of six components.\\
 
-The interest of being able to represent the images in a two-dimensional structure comes from the idea of simplifying things for better understanding. High dimensional data usually lies in hidden low dimensional manifolds, techniques like t-SNE give us insights about this underlying structure. The reason we chose this method instead of a Principal Component Analysis was that t-SNE is particularly well suited for embedding a high dimensional space into a two dimensional one.\\
+To test our hypothesis over this new set of data, we used an algorithm known as t-Distributed Stochastic Neighbor Embedding (t-SNE), introduced by Laurens van der Maaten \cite{t-sne}. This technique allowed us to visualize the information in a two-dimensional plane\footnote{The interest of being able to represent the images in a two-dimensional structure comes from the idea of simplifying things for better understanding. High dimensional data usually lies in hidden low dimensional manifolds, techniques like t-SNE give us insights about this underlying structure.}. As we expected the images of the different towns cluster in this low dimensional representation. We show our results in Figure \ref{fig:tsne}.\\
 
-We expected the images of the different towns to cluster in this low dimensional representation. We thought that pictures taken under in the same town would be closer than the ones taken in a different setting because of the light conditions during the exposure tend to have less variance among similar times and places.\\
+The outcome of this experiment gave us a reason to model our methodology around the characteristics of the data. Using the information of a certain town and later testing the model with data from another one allowed us to evaluate the generalization capacity of the model.\\
 
-One limitation that we found was that the size of the images\footnote{Raw images are $4000\times3000$ pixels, and three color channels each.} prevented us from computing the t-SNE for them. To overcome this problem, the information from the pixels of each image was flattened into a vector comprising the means and standard deviations for each color channel. This simple dimensionality reduction technique allowed us to use the aforementioned technique. As we expected, images form natural clusters depending on the town that they depict. We show our results in Figure \ref{fig:tsne}. This outcome adds to evidence that supports a methodology of using images from one town and try to predict on others to see how well does the model generalizes.\\
 
 \begin{figure}[!h]
   \centering
@@ -150,7 +149,8 @@ Another thing to be considered is that while traditional supervised classificati
 
 We extracted the HOG features using an implementation from the Python package scikit-image \cite{scikit-learn}. We used eight orientations, and a $16\times16$ pixel window. Each town was selected once for testing, in table \ref{table:classic}, we show the codes that we use in Figure \ref{fig:classic} to show the results that we obtained.\\
 
-\begin{center}
+\begin{table}
+  \caption{Permutation codes.}
   \begin{tabular}{|c|c|c|}
     \hline
     Train Set                                      &Test Set               &Code \\ \hline
@@ -160,7 +160,7 @@ We extracted the HOG features using an implementation from the Python package sc
     \hline
   \end{tabular}
   \label{table:classic}
-\end{center}
+\end{table}
 
 \begin{figure}[ht]
   \centering
@@ -188,7 +188,8 @@ It was surprising that the model that showed the best performance was the one in
 
 In the case of transfer learning, we have three types of sets and three towns. This fact makes six different possible configurations. Thus six different models for each training set size. We retrained the Inception model using our dataset and 1000 training steps\footnote{We empirically noticed that further increase in the number of training steps did not improve the final accuracy of the model.}.\\
 
-\begin{center}
+\begin{table}[h!]
+  \caption{Permutation codes.}
   \begin{tabular}{|c|c|c|c|}
     \hline
     Train Set              &Validate Set           &Test Set               &Code  \\ \hline
@@ -200,7 +201,7 @@ In the case of transfer learning, we have three types of sets and three towns. T
     Santa Mar\'ia Xadani   &Juchit\'an de Zaragoza &Uni\'on Hidalgo        &S-J-U \\
     \hline
   \end{tabular}
-\end{center}
+\end{table}
 
 \begin{figure}[h]
   \centering
@@ -215,7 +216,7 @@ A binary classifier assigns a real number in the interval $[0,1]$. To decide whi
 
 When dealing with a binary classifier, we want to predict a condition $p$. If the outcome of our classification is $p$ and the real value is also $p$ we call that a true positive (TP), if the actual value is instead $n$, we call that a false positive. Conversely, we assign names for a true negative (TN) and a false negative when we predict $n$ as the outcome for our classifier. We call true positive rate (TPR) or \textit{sensitivity} to the ratio between the outcomes correctly predicted as $p$ and the number of elements that are indeed $p$. We are also interested in the false positive rate (FPR) or \textit{specificity}, which is the proportion of incorrectly assigning $p$ given that the condition is $n$. In a ROC curve, we plot the sensitivity as a function of the specificity; it is used to select a decision threshold and have a tradeoff between detecting as many positives and having as little false alarms as possible. There is an additional feature of interest, the area under the ROC curve (AUC) is often used for model comparison, the closer the value is to $1$ the better.\\
 
-There is no correct way to select a decision threshold. It depends on the application at hand. For instance, when we are dealing with disease diagnosis, a screening test should be very sensitive whereas a confirmatory test should be very specific. In our case we want our classifier to be very sensitive because there is not as much overhead to have false alarms. In Figure \ref{fig:roc} we show the ROC curves for each of the transfer learning models, to build them, the prediction the test images were recorded in each permutation among the different training set sizes. Therefore, we have a ROC curve for every training set size. As we can see, the area under the curve is very close to $1$ in every case, and it increases as the training set size increases.\\
+There is no correct way to select a decision threshold. It depends on the application at hand. For instance, when we are dealing with disease diagnosis, a screening test should be very sensitive whereas a confirmatory test should be very specific. In our case we want our classifier to be very sensitive because there is not as much overhead to have false alarms. In Figure \ref{fig:roc} we show the ROC curves for each of the transfer learning models. To build them, the prediction for each test image was recorded for each permutation among the different training set sizes. Therefore, we have a ROC curve for every training set size. As we can see, the area under the curve is very close to $1$ in every case, and it increases as the training set size increases.\\
 
 \begin{figure}[!h]
   \centering

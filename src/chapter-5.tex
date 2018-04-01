@@ -1,8 +1,8 @@
-Even though deep learning has allowed us to do a giant leap forward on the performance of several tasks, and contrary to what some researchers claim \cite{DBLP:journals/corr/KaiserGSVPJU17}, there exists no universal model. A good model would be able to be performant in very different settings, but it won't be able to handle every situation. We need our model to be robust, but we can not expect it to be perfect. Being aware of the limitations intrinsic to the model is the best way to alleviate possible mistakes. Although it sometimes seems the case, deep learning is not a magic box, it learns from the data that we supply. If the model is biased, in all likelihood, it means that our training set is biased. In this chapter, we briefly discuss the details of implementing our method to be used in real-world setting.\\
+Even though deep learning has allowed us to take a giant leap forward on the performance of several tasks, and contrary to what some researchers claim \cite{DBLP:journals/corr/KaiserGSVPJU17}, there exists no universal model. A good model would be able to be performant in very different settings, but it won't be able to handle every situation. We need our model to be robust, but we can not expect it to be perfect. Being aware of the limitations intrinsic to the model is the best way to alleviate possible mistakes. Although it sometimes seems the case, deep learning is not a magic box, it learns from the data that we supply. If the model is biased, in all likelihood, it means that our training set is biased. In this chapter, we briefly discuss the details of implementing our method to be used in real-world setting.\\
 
 \section{Final Model}
 
-In the previous chapter, we trained and validated several models. We found that our methodology is quite useful in the task of locating damaged buildings. We now centered our efforts in creating a final model taking into account the entire dataset of 600 tagged samples. This model was not validated as there were no images left to use as a testing set. This process would closely resemble a real pipeline (Figure \ref{fig:process}).\\
+In the previous chapter, we trained and validated several models. We found that our methodology is quite useful in the task of locating damaged buildings. We now centered our efforts on creating a final model taking into account the entire dataset of 600 tagged samples. This model was not validated as there were no images left to use as a testing set. This process would closely resemble a real pipeline (Figure \ref{fig:process}).\\
 
 
 \begin{figure}[!h]
@@ -27,40 +27,35 @@ We envisioned two methods to apply our predictive model to a full image. Sliding
 \begin{figure}[!h]
   \centering
   \includegraphics[width=\textwidth]{images/overlap.jpg}
-  \caption{Results of our experiment. As we expected, the graph shows a positive correlation between the accuracy and the number of training samples.}
+  \caption{An output of our process after predicting over randomly sampled patches. We see positive predictions overlapping over some regions.}
   \label{fig:overlap}
 \end{figure}
 
-
-
-
-It is evident that this approach has inherent flaws, as damaged sites are counted several times by the algorithm. A method to alleviate overlapping bounding boxes is known as non-maximum suppression (NMS), a technique borrowed from facial recognition algorithms. First proposed by A. Rosenfeld and M. Thurston in the context of edge detection techniques \cite{1671883}, it consists of checking the percentage of overlap in the set of bounding boxes and discarding those that repeat. The final result after postprocessing looks like Figure \ref{fig:nooverlap}.\\
+A limitation of this approach is that damaged sites are counted several times by the algorithm. A method to alleviate overlapping bounding boxes is known as non-maximum suppression (NMS), a technique borrowed from facial recognition algorithms. First proposed by A. Rosenfeld and M. Thurston in the context of edge detection techniques \cite{1671883}, it consists of checking the percentage of overlap in the set of bounding boxes and discarding those that repeat. The final result after postprocessing looks like Figure \ref{fig:nooverlap}.\\
 
 
 \begin{figure}[!h]
   \centering
   \includegraphics[width=\textwidth]{images/no-overlap.jpg}
-  \caption{Results of our experiment. As we expected, the graph shows a positive correlation between the accuracy and the number of training samples.}
+  \caption{The same region as Figure \ref{fig:overlap} after post-processing.}
   \label{fig:nooverlap}
 \end{figure}
 
 
 \subsection{Orthorectification}
 
-In order to transform our images into useful information from the spatial point of view we need to put them through a process called orthorectification. It removes the effects that arise from the perspective in which the drone took the image. It also stiched and puts the images together to create a mosaic that covers the region of interest. This process needs specialised software, and CENAPRED built those mosaics for us. These rasters are the ones that we use to test our final model. The mosaics gave us the ability to assing coordinates to each of the sites in which the model gave us a positive output. 
+In order to transform our images into useful information from the spatial point of view we need to put them through a process called orthorectification. It removes the effects that arise from the perspective in which the drone took the image. It also mosaics and puts the images together to create a raster that covers the region of interest. This process needs specialised software, and CENAPRED built those mosaics for us. These rasters are the ones that we use to test our final model. The mosaics gave us the ability to assign coordinates to each of the sites in which the model gave us a positive output.
 
-
-
-
-\section{Final Results}
+\section{Results}
 
 Using the methods described in the previous section, we applied our process to the three orthorectified rasters provided by CENAPRED. We randomly placed $322\times322$ pixels boxes along the raster, randomly sampling the location of each of them. The boxes with a positive outcome were saved and post-processed to find overlaps. Once we have the non-overlapping boxes, we transform the center pixel of each box to world coordinates. Finally, these coordinates are used to query Google Maps API obtaining a human-readable address for each point. In table \ref{table:results} we show details of this exercise.\\
 
-We produced a shape-file containing the results for each town given the output of the algorithm. This shape can be overlayed on top of the raster file using a Geographic Information System software such as QGIS. Figures \ref{fig:juchitan-gis},\ref{fig:santamaria-gis}, and \ref{fig:union-gis} show our results. Additionally, the results are also exposed via the REST interface so we can visualize them in the web application as we saw in Figure \ref{fig:predict}.\\
+We produced a shape-file containing the results for each town given the output of the algorithm. This layer can be overlayed on top of the raster file using a Geographic Information System software such as QGIS. Figures \ref{fig:juchitan-gis},\ref{fig:santamaria-gis}, and \ref{fig:union-gis} show our results. Additionally, the results are also exposed via the REST interface so we can visualize them in the web application as we saw in Figure \ref{fig:predict}.\\
 
 
 \begin{table}[h!]
   \centering
+  \caption{We report details on running the algorithm on the orthorectified rasters. Width and height are in pixels. Threshold is our decision boundry to decide whether or not a window is considered to have damage. Windows are the number of predictions that the model gave us. We also report the time in seconds that each process took.}
   \begin{tabular}{|c|c|c|c|c|c|c|c|}
     \hline
     Town                 &Threshold&Positives  & Width & Height & Seconds & Overlap &Windows \\ \hline
@@ -69,7 +64,6 @@ We produced a shape-file containing the results for each town given the output o
     Uni\'on Hidalgo        &0.96      &73         & 19945 & 28795  & 11363   & 0.0005  &34188 \\
     \hline
   \end{tabular}
-  \caption{We report details on running the algorithm on the orthorectified rasters. Width and height are in pixels. Threshold is our decision boundry to decide wether or not a window is considered to have damage. Windows are the number of predictions that the model gave us. We also report the time in seconds that each process took.}
   \label{table:results}
 \end{table}
 
@@ -112,4 +106,7 @@ We produced a shape-file containing the results for each town given the output o
   \label{fig:union-gis}
 \end{figure}
 
+\section{Digest}
+
+We were able to build a process that allowed us to transform raw images taken by drones into a map of points with a high probability of damage in an automated way. Coupled with a usable graphical interface, this tool would allow acting quickly and effectively in the event of a catastrophe. The method, although focused on earthquakes, can be adapted to other situations. Our experiment proves that it is possible to use innovative technologies to aid the poorest population.
 
