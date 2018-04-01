@@ -1,15 +1,15 @@
-Analyzing a massive amount of images requires a better way of handling and sorting them than just storing them into directories. Borrowing ideas on how are the transfer learning process made by the engineers in the Tensorflow team; our catalog system grew to comply with those needs. In a later stage, the analysis process was also included into the system spawning what could become a framework to analyze visual patterns in sets of images with many different purposes.\\
+Analyzing a massive amount of images requires a better way of handling and sorting them than just storing them into directories. Borrowing ideas of how is the transfer learning process made by the engineers in the Tensorflow team; our catalog system grew to comply with those needs. In a later stage, the analysis process was also included into the system, spawning what could become a framework to analyze visual patterns in sets of images with many different purposes.\\
 
 The development process showed the need for a better set of tools to overcome several difficulties. The training stage involved a repetitive process consisting of manually inspecting the available imagery. To this end, we built a web application on top of our catalog system facilitating this process. The action of continuously showing and tagging images proved to be error-prone, each mistakenly tagged picture, required to log into the database and delete the wrong entry after encoded file names. So a new feature was implemented into our tool, it shows the images and their respective tag and lets the user either delete or edit the classification. Finally, when we had the trained model, and it was predicting on the orthorectified rasters, the ability to geolocate the damaged areas and place them on a map was very convenient.\\
 
 
-As it was just exposed, we built the application thinking about the final user. Even though the correct implementation from a design perspective is out of the scope of this work, it was exciting to explore it as this would be the kind of problems arise in the case of getting such a system into production. The last few paragraphs explained how the system grew to a full server-client architecture to respond to the need of processing data and visualizing the results in a meaningful way.\\
+As it was just exposed, we built the application thinking about the final user. Even though the correct implementation from a design perspective is out of the scope of this work, it was exciting to explore it as this would be the kind of problems that arise in the case of getting such a system into production. The last few paragraphs explained how the system grew to a full server-client architecture to respond to the need of processing data and visualizing the results in a meaningful way.\\
 
 The purpose of this chapter is to talk about the implementation of our experiment. We unveil the techniques used to obtain and curate data, and details of the pipeline architecture.\\
 
 \section{Backend}
 
-To understand why some design decision where made we need to understand the nature of our data. Data came in directories taken from the drones and split by flying dates. The quantity and naming of the images were not uniform across towns. Additionally, drone imagery provides metadata that is useful to geolocate the images. However, this information is limited as it only offers the place where the image was taken but gives no information about the image resolution. So the first part of the application was to transform these data into a way that would be easier to manage.\\
+To understand why some design decision were made we need to understand the nature of our data. Data came in directories taken from the drones and split by flying dates. The quantity and naming of the images were not uniform across towns. Additionally, drone imagery provides metadata that is useful to geolocate the images. However, this information is limited as it only offers the place where the image was taken but gives no information about the image resolution. So the first part of the application was to transform these data into a way that would be easier to manage.\\
 
 
 Given to previous experience in developing similar projects, we decided to build the system on top of a Python web framework called Django \cite{django}. It offers many solutions out of the box, including a familiar line interface set of commands and an object-relational mapper (ORM) that makes the database integration easier. The feature of being ready to offer a web interface was a great plus.\\
@@ -19,18 +19,16 @@ Given to previous experience in developing similar projects, we decided to build
 
 We took advantage of Django's ORM. It creates Python classes that represent tables in the database and manipulates them as Python objects. In the figure \ref{fig:database} we show a subset of the database diagram. We do not show tables inherent to the features of the Django framework as they were not modified.\\
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{images/database.png}
   \caption{Database schema.}
   \label{fig:database}
 \end{figure}
 
-We based our database design on reproducible research. We wanted to keep track of the characteristics of the models trained. We also wanted to know which were the training images used for each model. It was also desirable to be able to reuse models trained with different sets of images for benchmarking. Finally, we wanted to use the best model to predict on the final rasters.\\
+We based our database design on reproducible research. It was important to keep track of the characteristics of the models trained as well as the training images used for each model. It was also desirable to be able to reuse models trained with different sets of images for benchmarking. Finally, we wanted to use the best model to predict on the final rasters.\\
 
 \subsection{Ingestion}
-
-We based our database design on reproducible research. We wanted to keep track of the characteristics of the models trained. We also wanted to know which were the training images used for each model. It was also desirable to be able to reuse models trained with different sets of images for benchmarking. Finally, we wanted to use the best model to predict on the final rasters.\\
 
 We built a process to ingest the images from CENAPRED's FTP. It lazily downloads the images by checking first if the file is already present in the temporary folder, if the file does not exist already, we download it. The system then tries to add it to the database and copies it to the file system. To maintain a coherent one to one mapping between the database and the file system, the process of adding a new scene must be successful both in the database and in the filesystem. Otherwise, we erased the file from both, and the state of the system remains as it was before the ingestion attempt. In Figure \ref{fig:ingest} we show a diagram of this process.\\
 
@@ -43,7 +41,7 @@ We built a process to ingest the images from CENAPRED's FTP. It lazily downloads
 
 \subsection{Tagging}
 
-Aerial tagged data is scarce. In particular, for our experiment, we do not have any useful metadata on the images. The idea behind our design was to crowdsource this effort. We built a service that crops samples from the images and exposes them to an online application that lets any user with access to tag an image. We have two categories: the image shows damage, and there is no visible damage in the image. When we obtained a positive answer, the system persists de image in the database with the information about the original image and the coordinates relative to it. In Figure \ref{fig:tag} we show a diagram of this process.\\
+Aerial tagged data is scarce. In particular, for our experiment, we do not have any useful metadata on the images. The idea behind our design was to crowdsource this effort. We built a service that crops samples from the images and exposes them to an online application that lets any user with access to tag an image. We have two categories: the image shows damage, and there is no visible damage in the image. When we obtained a positive answer, the system persists the image in the database with the information about the original image and the coordinates relative to it. In Figure \ref{fig:tag} we show a diagram of this process.\\
 
 
 \begin{figure}[!h]
@@ -56,9 +54,9 @@ Aerial tagged data is scarce. In particular, for our experiment, we do not have 
 
 \subsection{Training}
 
-We need to be able to select a sample from the thumbnails that we extracted from the original images. We wanted to create a process that was easily reproductible so we could compare models in a simple fashion. To this end the a random sample is created every time the application runs and the image set is splitted in three sets: training, validation and testing.\\
+We need to be able to select a sample from the thumbnails that we extracted from the original images. We wanted to create a process that was easily reproductible so we could compare models in a simple fashion. To this end, a random sample is created every time the application runs and the image set is splitted in three sets: training, validation, and testing.\\
 
-The model does not need any geographical information in its training as it relies only on the pixel intensities. We took this to our advantage as we can use the raw drone images for the training stage while predicting on orthorectified mosaics. Tensorflow provides a script for retraining the last layer of inception by conecting the extracted features into a sofmax layer, and then training this classifier on the given set. It requires a directory layout tailored built to this purpose. We modified and integrated the script into our framework to fit our database design. This process made easier to train several models with similar training, validation, and testing sets. We show a diagram of our process in Figure \ref{fig:train}.\\
+The model does not need any geographical information in its training as it relies only on the pixel intensities. We took this to our advantage as we can use the raw drone images for the training stage while predicting on orthorectified mosaics. Tensorflow provides a script for retraining the last layer of Inception by conecting the extracted features into a sofmax layer, and then training this classifier on the given set. It requires a directory layout tailored built to this purpose. We modified and integrated the script into our framework to fit our database design. This process made easier to train several models with similar training, validation, and testing sets. We show a diagram of our process in Figure \ref{fig:train}.\\
 
 
 \begin{figure}[!h]
@@ -70,7 +68,7 @@ The model does not need any geographical information in its training as it relie
 
 \subsection{Prediction}
 
-Although this topic will make more sense once we learn about our experiment results in next chapter, it is worth explaining the process here. Once we have a trained model, we can use it to classify new incoming data and show it to the final user. Once the rasters are subject of the preficting process, results are persisted in the database and the information may be accesible through a client. We show how we ensvision this process in Figure \ref{fig:predict}.\\
+Although this topic will make more sense once we learn about our experiment results in next chapter, it is worth explaining the process here. Once we have a trained model, we can use it to classify new incoming data and show it to the final user. Once the rasters are subject to the predicting process, results are persisted in the database and the information may be accessible through a client. We show how we ensvision this process in Figure \ref{fig:predict}.\\
 
 \begin{figure}[h]
   \centering
@@ -81,7 +79,7 @@ Although this topic will make more sense once we learn about our experiment resu
 
 \section{Frontend}
 
-In the previous section, we talked about the backend components that perform the data governance. At the beginning of the process, we used these components to start our research. However, we soon noticed that it was challenging to manipulate data directly from the file system and the database. To alleviate this inconvenience, we built a set of tools that helped us in this process. This tools were developed using HTML, Javascript and CSS, using a set of common frameworks: Open Layers \footnote{https://openlayers.org/}, Bulma \footnote{https://bulma.io/}, and jQuery \footnote{https://jquery.com/}. While making a full account of the details involved in a web application goes far beyond the scope of the present work, we offer a brief description of our tool.\\
+In the previous section, we talked about the backend components that perform the data governance. At the beginning of the process, we used these components to start our research. However, we soon noticed that it was challenging to manipulate data directly from the file system and the database. To alleviate this inconvenience, we built a set of tools that helped us in this process. This tools were developed using HTML, Javascript and CSS, using a set of common frameworks: Open Layers \footnote{https://openlayers.org/}, Bulma \footnote{https://bulma.io/}, and jQuery \footnote{https://jquery.com/}. While making a full account of the details involved in a web application goes beyond the scope of the present work, we offer a brief description of our tool.\\
 
 \subsection{Data Visualization}
 
@@ -123,7 +121,7 @@ A web client was developed using jquery and OpenLayers, and it consumes the endp
 \end{figure}
 
 \subsection{Editing}
-We noticed that the tagging process was error-prone. To deal with those mistakenly tagged images, we needed to inspect the database and the file system to delete the record. A visualizer for the tagged images was developed to overcome this difficulty. It consists of an interface were the tagged images appear with their respective tag. The interface offers a way to delete or edit the previously assigned tag.\\
+We noticed that the tagging process was error-prone. In some cases, an image was given an incorrect label, and the error was immediately spotted. To deal with those mistakenly tagged images, we needed to inspect the database and the file system to delete the record. A visualizer for the tagged images was developed to overcome this difficulty. It consists of an interface were the tagged images appear with their respective tag. The interface offers a way to delete or edit the previously assigned tag.\\
 
 \begin{figure}[!h]
   \centering

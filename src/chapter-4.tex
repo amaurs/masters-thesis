@@ -1,8 +1,8 @@
 The process that our experiment undertook was iterative. Obstacles in the analysis showed the need to develop tools that helped us to make the process less cumbersome. In the same way that in the previous chapter we explored the flow of ideas that led to our pipeline design, here we will explain how data shaped our experimental process.\\
 
-The purpose of training a model, is to provide a faithful representation of the  studied phenomena, but how do we know that this description is correct? We need to validate the relationship between the outcome of the model and the data that we have at hand. This process is complicated. Validation must be carefully crafted to obtain valid results.\\
+The purpose of training a model, is to provide a faithful representation of the  studied phenomena, but how do we know that this description is correct? We need to validate the relationship between the outcome of the model and the data that we have at hand. Validation must be carefully crafted to obtain accurate results. In other words, we need to control the variables that might affect the outcome of the experiment so we can isolate the phenomena that we are studying.\\
 
-To have a complete picture of how does our approach compares with techniques from classical computer vision, we trained other models to test their performance against our novel approach. This exercise gave us some insight on the feasibility of a real world implementation.\\
+To have a complete picture of how our approach is compared with other classical techniques from  computer vision, we trained other models to test their performance against our novel approach. This exercise gave us some insight on the feasibility of a real world implementation.\\
 
 
 \section{Exploratory analysis}
@@ -47,7 +47,7 @@ During the week following the Chiapas earthquake of September 7, 2017, several d
 
 As we can see from Figures \ref{fig:juchitan}, \ref{fig:santamaria}, and \ref{fig:union}, drones fly in regular patterns forming a lattice of points, these clouds of information distribute spatially around the towns of interest. We wanted to show that this clustering translates to the space of information that the images contain. To do this, we used a technique known as t-Distributed Stochastic Neighbor Embedding (t-SNE), introduced by Laurens van der Maaten \cite{t-sne}, as an alternative to traditional methods that were difficult to optimize given the computational costs.\\
 
-The interest of being able to represent the images in a two-dimensional structure comes from the idea of simplifying things for better understanding. High dimensional data usually lies in hidden low dimensional manifolds, techniques like t-SNE gives us insights about this underlying structure. The reason that we chose this method instead of a Principal Component Analysis was that t-SNE is particularly well suited for embedding a high dimensional space into a two dimensional one.\\
+The interest of being able to represent the images in a two-dimensional structure comes from the idea of simplifying things for better understanding. High dimensional data usually lies in hidden low dimensional manifolds, techniques like t-SNE give us insights about this underlying structure. The reason we chose this method instead of a Principal Component Analysis was that t-SNE is particularly well suited for embedding a high dimensional space into a two dimensional one.\\
 
 We expected the images of the different towns to cluster in this low dimensional representation. We thought that pictures taken under in the same town would be closer than the ones taken in a different setting because of the light conditions during the exposure tend to have less variance among similar times and places.\\
 
@@ -133,8 +133,14 @@ We reduced the problem to binary classification by selecting only two labels; a 
 
 As mentioned earlier, we studied three different towns, so we assembled different datasets using a different permutation each time. In the case of the classic computer vision methods, we used two towns to train the model and the remaining one to test the trained model. In the case of the transfer learning model, we used the images of one town to retrain the model, the images of another town to validate the model during the training stage, and the remaining town to test the trained model. In all cases, we tested every single image in the testing town against the model.\\
 
-One of the difficulties that we found during our research process was that several images might depict the same collapsed building. 
-This event could happen when the drone flew over the same territory in different routes. During the tagging stage, we inspected the images for damaged areas, however, despite our efforts, it was impossible to obtain a set of pictures in which every single one was completely independent of the rest. This fact shaped our validation process.\\
+One of the difficulties that we found during our research process was that several images might depict the same collapsed building (Figure \ref{fig:compare}). This event could happen when the drone flew over the same territory in different routes. During the tagging stage, we inspected the images for damaged areas, however, despite our efforts, it was impossible to obtain a set of pictures in which every single one was completely independent of the rest. This fact shaped our validation process.\\
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{images/compare.jpg}
+  \caption{An example of the same building in two diferent images. The drone flew over the same place in different moments and directions.}
+  \label{fig:compare}
+\end{figure}
 
 A classical approach would be to divide the dataset into two parts; training and testing sets, the model is trained with the former, and then tested against the latter. This method is not used in practice because data is usually scarce and we would like to take the most of it. A better option is n-fold crossed-validation in which we repeat a similar approach n times and average the outcomes. This process makes more likely to train the model with every data point and average out errors that may appear by chance. However, n-fold crossed-validation does not suit our case because of the nature of our dataset. As a consequence of the patterns in which the drones overfly the area, some buildings appear several times in the dataset even though the original pictures were not the same. If we apply a technique such as cross-validation, it would be very likely to have the same building both in training and in the testing sets. This situation would lead to having very high accuracies for our model but not such good performance in a real setting.\\
 
@@ -143,7 +149,6 @@ Another thing to be considered is that while traditional supervised classificati
 \subsection{Classic Computer Vision}
 
 We extracted the HOG features using an implementation from the Python package scikit-image \cite{scikit-learn}. We used eight orientations, and a $16\times16$ pixel window. Each town was selected once for testing, in table \ref{table:classic}, we show the codes that we use in Figure \ref{fig:classic} to show the results that we obtained.\\
-
 
 \begin{center}
   \begin{tabular}{|c|c|c|}
@@ -177,7 +182,7 @@ We extracted the HOG features using an implementation from the Python package sc
   \label{fig:classic}
 \end{figure}
 
-It was surprising that the model that showed the best performance was the one in which we considered means and standard deviations. We expected that the specialized features of the HOG model to perform better than a simple mean and standard deviation extraction. We think that the reason behind this was that the HOG features were designed to find objects in images, but they are not well suited for aerial images and the textures that characterize debris. As we expected, increasing the size of the training set results in improving the performance of the trained model. In particular, we noticed that the worse performing models were the ones using Juchit\'an de Zaragoza as the training set, a hypothesis is that the pictures from Santa Mar\'ia Xadani and Uni\'on Hidalgo do not generalize so well. The best performing model achieved 78\% accuracy and used Santa Mar\'ia Xadani as the testing set and all of the remaining 400 images to train. The worse performing model achieved 43.5\% and used Uni\'on Hidalgo to test with only 40 images in the training set which is particularly unfortunate considering we are dealing with binary classifiers \footnote{A binary classifier which scores less than 50\% accuracy is worse than flipping a coin and using that flip to decide the class.}.\\
+It was surprising that the model that showed the best performance was the one in which we considered means and standard deviations. We expected that the specialized features of the HOG model to perform better than a simple mean and standard deviation extraction. We think that the reason behind this was that the HOG features were designed to find objects in images, but they are not well suited for aerial images and the textures that characterize debris. As we expected, increasing the size of the training set results in improving the performance of the trained model. In particular, we noticed that the worse performing models were the ones using Juchit\'an de Zaragoza as the training set, a hypothesis is that the pictures from Santa Mar\'ia Xadani and Uni\'on Hidalgo do not generalize so well. The best performing model achieved 78\% accuracy and used Santa Mar\'ia Xadani as the testing set and all of the remaining 400 images to train. The worse performing model achieved 43.5\% and used Uni\'on Hidalgo to test with only 40 images in the training set which is particularly unfortunate considering we are dealing with binary classifiers.\\
 
 \subsection{Transfer Learning}
 
@@ -197,14 +202,12 @@ In the case of transfer learning, we have three types of sets and three towns. T
   \end{tabular}
 \end{center}
 
-
 \begin{figure}[h]
   \centering
   \includegraphics[width=1\textwidth]{images/validation-plot.png}
   \label{fig:validaton-plot}
   \caption{Results of our experiment. As we expected, the graph shows a positive correlation between the accuracy and the number of training samples.}
 \end{figure}
-
 
 \subsection{Threshold Selection}
 
