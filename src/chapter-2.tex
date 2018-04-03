@@ -87,6 +87,29 @@ The reasoning behind this idea is that when we see a picture, our brain automati
   \label{fig:rotate}
 \end{figure}
 
+\section{Neural Networks}
+
+This section will briefly explain how neural networks work and some of the important concepts behind them. The discussion is based on notes by Andrej Karpathy \cite{karpathy}, an introduction to neural networks by Christos Stergiou and Dimitrios Siganos \cite{stergiou}, and an online publication by Michael Nielsen \cite{nielsen}.\\
+
+An artificial neuron is a function that was conceived based on the idea of biological neurons. It has one or more inputs and sums them into an output. In order to continue with the biological analogy, we say that the neuron is active when a certain threshold is attained after applying a function to the linear combination of inputs. This function is called activation function and should be non-linear. So an artificial neuron looks like this:
+
+\begin{align}
+y_k=\phi\left(\sum^n_{i=0}w_{ik}x_i\right)\nonumber
+\end{align}
+
+By design, several artificial neurons can be plugged together to form a network. A set of neurons at the same level from the input is called a layer. It is important to highlight that without the non-linearity of the activation function, several layers of neurons could be simplified to a single layer because a linear combination of linear functions will remain linear.\\
+
+There exist many architectures for these networks of neurons, the simplest one and the one that we will focus on is called feed-forward neural network. In this particular architecture, information flow through the neurons in a unidirectional way. When the output of a neuron is connected to the input of other neurons we call it a hidden layer neuron. It was proven by G. Cybenko \cite{cybenko:mcss} that neural networks with at least one hidden layer and with a specific class of activation functions are universal approximators, this means any continuous function can be arbitrarily approximated with a neural network. While this result proves the existence of such a neural network, it does not provide an algorithm of how to build it, however, it shows the representational power if the tool.\\
+
+Other two main parts of the discussion of neural networks are the score function and the loss function. While our data points $(x_k, y_k)$ are given, we can choose the weights $w_i$ to make the output of our model resemble our data. Intuitively, the score function transforms raw data into class scores so that we can choose the correct class given an input. In the other hand, the loss function gives us a measure of how different is our output compared to the ground truth labels.
+\\
+
+To be used as a classification tool, the neural network receives the data as input and must produce as output information that allows choosing a class. Broadly speaking, this is done through linear combinations and activation functions, producing a score for each class through the score function, which is evaluated with the loss function. So that this tool can be used in practice, a way to modify the weights is necessary to improve the performance of the network. Fortunately, there are different methods to train the neural networks that have allowed their diffusion and growth. One is these methods is known as backpropagation.\\
+
+As we already mentioned, the loss function measures how close our results are to our data. It would be desirable to minimize this function by modifying the weights of the units in the network. To do this we can apply optimization methods such as Gradient Descent. By construction, the neural network is a continuous function except perhaps in some finite number of points. This means that we can calculate the direction of maximum descent for the loss function and use this information to change the weights of the neurons connected directly to it. Subsequently, the new weights are used to recalculate the weights of the neurons connected to these and so on. The step of the algorithm ends when there are no more neurons left to update. This algorithm gets its name from the way the gradient signal propagates through the network in the opposite directions as the information flows in the forward pass.\\
+
+There are many details involved in the types of functions used in each step of the process described. There is is a lot of ongoing research about the best ways to exploit the neural networks. A deeper explanation is out of the scope of this work.\\
+
 \section{TensorFlow}
 
 TensorFlow is a machine learning system developed by the Google Brain Team to supersede its first-generation system, DistBelief. Built on top of the lessons learned during DistBelief development. One of the fundamental concepts that lead the team to create a new system from scratch was the need for flexibility. TensorFlow lets us express machine learning algorithms using a standard interface with implementations targeting a wide range of devices. Complex models that first implemented in DistBelief such as Inception got a performance boost of a factor of x6 \cite{tensorflow2015-whitepaper} when they got moved to the new system. TensorFlow was opened sourced on November 9, 2015 under the Apache 2.0 license.\\ 
@@ -113,6 +136,8 @@ There are several alternatives that offer similar features to TensorFlow. Theano
 \section{Summary}
 
 An extensive literature review gave us the tools to plan our methodology, based on the ideas that we thought were promising for our objective. Given the results reported in \cite{DBLP:journals/corr/YosinskiCBL14}, we decided to use transfer learning for our task. We decided not to explore the concept of data augmentation because we had the ability to control the size of the training set. We took the tool that TensorFlow provides to perform transfer learning, using Inception as the architecture to start with. Based on \cite{DBLP:journals/corr/RazavianASC14}, we choose to compare the method using transfer learning with a more classical approach, in our case we chose a random forest classifier. To keep the scope of our work not too ambitious we left out the possibility of collating our results with official data as suggested on \cite{Kryvasheyeue1500779}.
+
+
 
 
 
