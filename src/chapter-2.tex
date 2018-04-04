@@ -2,6 +2,30 @@ In this chapter, we talk about state-of-the-art technologies in computer vision 
 
 An excellent introduction to neural networks in the context of remote sensing is in \cite{canty2014image}. It reviews all the necessary mathematical tooling to deal with the processing image algorithms and implements them in an interpreted high leve language called Python. A survey of distinct aspects of how to transfer learning from separate domains is in \cite{5288526}.\\
 
+
+\section{Neural Networks}
+
+This section will briefly explain how neural networks work and some of the important concepts behind them. The discussion is based on notes by Andrej Karpathy \cite{karpathy}, an introduction to neural networks by Christos Stergiou and Dimitrios Siganos \cite{stergiou}, and an online publication by Michael Nielsen \cite{nielsen}.\\
+
+An artificial neuron is a function that was conceived based on the idea of biological neurons. It has one or more inputs and sums them into an output. In order to continue with the biological analogy, we say that the neuron is active when a certain threshold is attained after applying a function to the linear combination of inputs. This function is called activation function and should be non-linear. So an artificial neuron has a general form like the following, where $x_i$s are the inputs, $w_{ik}$ are weights, and $\phi$ is the activation function:
+
+\begin{align}
+y_k=\phi\left(\sum^n_{i=0}w_{ik}x_i\right)\nonumber
+\end{align}
+
+By design, several artificial neurons can be plugged together to form a network. A set of neurons at the same level from the input is called a layer. It is important to highlight that without the non-linearity of the activation function, several layers of neurons could be simplified to a single layer because a linear combination of linear functions will remain linear.\\
+
+Many architectures exist for networks of neurons, the simplest one and the one that we will focus on is called feed-forward neural network. In this particular architecture, information flow through the neurons in a unidirectional way. When the output of a neuron is connected to the input of other neurons we call it a hidden layer neuron. It was proven by G. Cybenko \cite{cybenko:mcss} that neural networks with at least one hidden layer and with a specific class of activation functions are universal approximators, this means any continuous function can be arbitrarily approximated with a neural network. While this result proves the existence of such a neural network, it does not provide an algorithm of how to build it, however, it shows the representational power if the tool.\\
+
+Other two main parts of neural networks are the score function and the loss function. While our data points $(x_k, y_k)$ are given, we can choose the weights $w_i$ to make the output of our model resemble our data. Intuitively, the score function transforms raw data into class scores so that we can choose the correct class given an input. On the other hand, the loss function gives us a measure of how different our output is compared to the ground truth labels.
+\\
+
+To be used as a classification tool, the neural network receives the data as input and produces information that allows to predict a class. Broadly speaking, this is done through linear combinations and activation functions. The score function produces a result that is evaluated by the loss function. A way to modify the weights is necessary to improve the performace of the network so it is useful in practice. Fortunately, there are different methods to train neural networks that have added to their increasing popularity and development. One is these methods is known as backpropagation.\\
+
+As already mentioned, the loss function measures how close our results are to our data. It would be desirable to minimize this function by modifying the weights of the units in the network. To do this we can apply optimization methods such as Gradient Descent. By construction, the neural network is a continuous function except perhaps in some finite number of points. This means that we can calculate the direction of maximum descent for the loss function and use this information to change the weights of the neurons connected directly to it. Subsequently, the new weights are used to recalculate the weights of the neurons connected to these and so on. The algorithm ends when there are no more neurons left to update. This algorithm gets its name from the way the gradient signal propagates through the network in the opposite directions as the information flow in the forward pass.\\
+
+There are many details involved in the types of functions used in each step of the process described. There is is a lot of ongoing research about the best ways to exploit the neural networks. A deeper explanation is out of the scope of this work.\\
+
 \section{Damage Assesment}
 
 In the field of natural disasters, we found many references to work that takes advantage of datasets in many different forms. For example Kryvasheyeu \textit{et al.}, in 2016, used the twitter activity during  Hurricane Sandy to build a model. They found that social media activity correlates with the proximity of the region in which the Hurricane hits \cite{Kryvasheyeue1500779}. Nevertheless, they mention that the nature of the data available both in quantity and quality is unusual in part because of the severity and magnitude of damage that the Hurricane Sandy brought about.\\
@@ -87,28 +111,6 @@ The reasoning behind this idea is that when we see a picture, our brain automati
   \label{fig:rotate}
 \end{figure}
 
-\section{Neural Networks}
-
-This section will briefly explain how neural networks work and some of the important concepts behind them. The discussion is based on notes by Andrej Karpathy \cite{karpathy}, an introduction to neural networks by Christos Stergiou and Dimitrios Siganos \cite{stergiou}, and an online publication by Michael Nielsen \cite{nielsen}.\\
-
-An artificial neuron is a function that was conceived based on the idea of biological neurons. It has one or more inputs and sums them into an output. In order to continue with the biological analogy, we say that the neuron is active when a certain threshold is attained after applying a function to the linear combination of inputs. This function is called activation function and should be non-linear. So an artificial neuron looks like this:
-
-\begin{align}
-y_k=\phi\left(\sum^n_{i=0}w_{ik}x_i\right)\nonumber
-\end{align}
-
-By design, several artificial neurons can be plugged together to form a network. A set of neurons at the same level from the input is called a layer. It is important to highlight that without the non-linearity of the activation function, several layers of neurons could be simplified to a single layer because a linear combination of linear functions will remain linear.\\
-
-There exist many architectures for these networks of neurons, the simplest one and the one that we will focus on is called feed-forward neural network. In this particular architecture, information flow through the neurons in a unidirectional way. When the output of a neuron is connected to the input of other neurons we call it a hidden layer neuron. It was proven by G. Cybenko \cite{cybenko:mcss} that neural networks with at least one hidden layer and with a specific class of activation functions are universal approximators, this means any continuous function can be arbitrarily approximated with a neural network. While this result proves the existence of such a neural network, it does not provide an algorithm of how to build it, however, it shows the representational power if the tool.\\
-
-Other two main parts of the discussion of neural networks are the score function and the loss function. While our data points $(x_k, y_k)$ are given, we can choose the weights $w_i$ to make the output of our model resemble our data. Intuitively, the score function transforms raw data into class scores so that we can choose the correct class given an input. In the other hand, the loss function gives us a measure of how different is our output compared to the ground truth labels.
-\\
-
-To be used as a classification tool, the neural network receives the data as input and must produce as output information that allows choosing a class. Broadly speaking, this is done through linear combinations and activation functions, producing a score for each class through the score function, which is evaluated with the loss function. So that this tool can be used in practice, a way to modify the weights is necessary to improve the performance of the network. Fortunately, there are different methods to train the neural networks that have allowed their diffusion and growth. One is these methods is known as backpropagation.\\
-
-As we already mentioned, the loss function measures how close our results are to our data. It would be desirable to minimize this function by modifying the weights of the units in the network. To do this we can apply optimization methods such as Gradient Descent. By construction, the neural network is a continuous function except perhaps in some finite number of points. This means that we can calculate the direction of maximum descent for the loss function and use this information to change the weights of the neurons connected directly to it. Subsequently, the new weights are used to recalculate the weights of the neurons connected to these and so on. The step of the algorithm ends when there are no more neurons left to update. This algorithm gets its name from the way the gradient signal propagates through the network in the opposite directions as the information flows in the forward pass.\\
-
-There are many details involved in the types of functions used in each step of the process described. There is is a lot of ongoing research about the best ways to exploit the neural networks. A deeper explanation is out of the scope of this work.\\
 
 \section{TensorFlow}
 
