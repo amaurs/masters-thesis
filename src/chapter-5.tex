@@ -56,6 +56,7 @@ We produced a shape-file containing the results for each town given the output o
 \begin{table}[h!]
   \centering
   \caption{We report details on running the algorithm on the orthorectified rasters. Width and height are in pixels. Threshold is our decision boundry to decide whether or not a window is considered to have damage. Windows are the number of predictions that the model gave us. We also report the time in seconds that each process took.}
+  \resizebox{\textwidth}{!}{%
   \begin{tabular}{|c|c|c|c|c|c|c|c|}
     \hline
     Town                 &Threshold&Positives  & Width & Height & Seconds & Overlap &Windows \\ \hline
@@ -63,7 +64,7 @@ We produced a shape-file containing the results for each town given the output o
     Juchit\'an de Zaragoza &0.96      &562        & 42375 & 28831  & 21216   & 0.0005  &72372 \\ \hline
     Uni\'on Hidalgo        &0.96      &73         & 19945 & 28795  & 11363   & 0.0005  &34188 \\
     \hline
-  \end{tabular}
+  \end{tabular}}
   \label{table:results}
 \end{table}
 
